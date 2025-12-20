@@ -93,12 +93,15 @@ export default function HomePage() {
         <Navigation />
         <HeroSection>
           <HeroContent>
-            <HeroTitle>Corbin United Inc.</HeroTitle>
+            <HeroTitle>Corbin United, Inc.</HeroTitle>
             <HeroSubtitle>
               Focusing on Family Health, History and Enhancing our Well-Being
             </HeroSubtitle>
             <HeroTagline>
               A 501(c)(3) Organization • Family Focused - Health Driven
+            </HeroTagline>
+            <HeroTagline>
+              Early, Maddox, Corbin, Oneal, Crippen, Conix
             </HeroTagline>
           </HeroContent>
         </HeroSection>

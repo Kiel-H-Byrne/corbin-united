@@ -85,7 +85,7 @@ export const HERO_CAROUSEL: HeroCarouselItem[] = [
     },
     type: "video",
     aspect: "9:16",
-    url: "https://firebasestorage.googleapis.com/v0/b/ai-slideshow.firebasestorage.app/o/assets%2Fclients%2Fcorbin-united-inc%2Fvideo%2Fcorbin-united-loretta-early-message-clip.3gp?alt=media",
+    url: "/video/LorettaEarly.3gp",
   },
   {
     title: "Basket of Cheer Raffle 2025",

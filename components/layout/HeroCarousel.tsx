@@ -121,7 +121,15 @@ const CarouselItem = ({ item, isActive }: CarouselItemProps) => {
         }}
       >
         {type === "video" ? (
-          <video src={url} autoPlay loop muted playsInline controls />
+          <video
+            src={url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls
+            type="video/3gp"
+          />
         ) : (
           <Image
             src={url}
