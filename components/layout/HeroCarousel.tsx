@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import styled from "styled-components";
 import { HERO_CAROUSEL } from "@/data/events";
 import { HeroCarouselItem } from "@/types";
+import Image from "next/image";
+import { useState } from "react";
+import styled from "styled-components";
 
 const CarouselItemContainer = styled.div`
   display: grid;
@@ -38,7 +39,7 @@ const MediaContainer = styled.div`
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 `;
 
@@ -109,16 +110,25 @@ type CarouselItemProps = {
 const CarouselItem = ({ item, isActive }: CarouselItemProps) => {
   const { textContent, type, url, aspect } = item;
   const [width, height] = aspect.split(":").map(Number);
-
+  const MAX_HEIGHT = 500;
+  const ASPECT_WIDTH = MAX_HEIGHT * (width / height);
   return (
     <CarouselItemContainer className={isActive ? "active" : ""}>
       <MediaContainer
-        style={{ maxHeight: "500px", aspectRatio: `${width} / ${height}` }}
+        style={{
+          maxHeight: `${MAX_HEIGHT}px`,
+          aspectRatio: `${width} / ${height}`,
+        }}
       >
         {type === "video" ? (
           <video src={url} autoPlay loop muted playsInline controls />
         ) : (
-          <img src={url} alt={item.title} />
+          <Image
+            src={url}
+            alt={item.title}
+            width={ASPECT_WIDTH}
+            height={MAX_HEIGHT}
+          />
         )}
       </MediaContainer>
       <TextContainer>
@@ -161,4 +171,3 @@ export const HeroCarousel = () => {
     </div>
   );
 };
-

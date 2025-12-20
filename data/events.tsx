@@ -88,13 +88,14 @@ export const HERO_CAROUSEL: HeroCarouselItem[] = [
     url: "https://firebasestorage.googleapis.com/v0/b/ai-slideshow.firebasestorage.app/o/assets%2Fclients%2Fcorbin-united-inc%2Fvideo%2Fcorbin-united-loretta-early-message-clip.3gp?alt=media",
   },
   {
-    title: "Corbin Family Reunion 2023",
+    title: "Basket of Cheer Raffle 2025",
     textContent: {
-      message: "We are so excited to see you all at the next reunion!",
-      signature: { name: "July 5, 2023" },
+      message:
+        "Drawings will be held hourly at the 2025 New Year's Eve Cabaret",
+      signature: { name: "" },
     },
     type: "image",
-    aspect: "16:9",
-    url: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=800&q=80",
+    aspect: "9:16",
+    url: "/events/BOCRaffle_2025.JPEG",
   },
 ];

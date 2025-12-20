@@ -1,30 +1,16 @@
 "use client";
 
-/*
- * Corbin United Inc. Website – MVP
- * All requirements, mockup, and style guide implemented by Terrell (THN Twin Developer Agent)
- * Pair programming comments for James included as // TODO(James): ...
- */
 import { Footer } from "@/components/layout/Footer";
-import { Header } from "@/components/layout/Header";
-import { AboutSection } from "@/components/sections/AboutSection";
-import { EducationSection } from "@/components/sections/EducationSection";
-import { EventsSection } from "@/components/sections/EventsSection";
-import { FamilyAlbumSection } from "@/components/sections/FamilyAlbumSection";
-import { FinancesSection } from "@/components/sections/FinancesSection";
-import { HealthSection } from "@/components/sections/HealthSection";
-import { ServicesSection } from "@/components/sections/ServicesSection";
+import { HeroCarousel } from "@/components/layout/HeroCarousel";
+import { Navigation } from "@/components/layout/Navigation";
 import { SectionTiles, Tile, TileIcon } from "@/components/ui/Tile";
 import { SECTION_LIST } from "@/data/sections";
 import { tokens } from "@/lib/theme";
 import { GlobalStyle } from "@/styles/GlobalStyle";
-import { useState } from "react";
+import Link from "next/link";
 import styled, { ThemeProvider } from "styled-components";
 
-// ======== STYLED COMPONENTS ========
-const AppContainer = styled.div.attrs({
-  "data-component": "AppContainer",
-} as any)`
+const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,89 +18,113 @@ const AppContainer = styled.div.attrs({
   min-height: 100vh;
 `;
 
-const MainContent = styled.main.attrs({
-  "data-component": "MainContent",
-} as any)`
+const HeroSection = styled.section`
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    ${(p) => p.theme.colors.accent} 0%,
+    ${(p) => p.theme.colors.accentHover} 100%
+  );
+  padding: ${(p) => p.theme.spacing.xxl}px ${(p) => p.theme.spacing.lg}px;
+  text-align: center;
+  color: ${(p) => p.theme.colors.surface};
+`;
+
+const HeroContent = styled.div`
+  max-width: 800px;
+  margin: 0 auto;
+`;
+
+const HeroTitle = styled.h1`
+  font-family: ${(p) => p.theme.typography.headingFont};
+  font-size: clamp(32px, 5vw, ${(p) => p.theme.typography.h1Size}px);
+  font-weight: 700;
+  margin-bottom: ${(p) => p.theme.spacing.md}px;
+  color: ${(p) => p.theme.colors.surface};
+`;
+
+const HeroSubtitle = styled.p`
+  font-size: ${(p) => p.theme.typography.h4Size}px;
+  margin-bottom: ${(p) => p.theme.spacing.sm}px;
+  opacity: 0.95;
+`;
+
+const HeroTagline = styled.p`
+  font-size: ${(p) => p.theme.typography.body1}px;
+  font-weight: ${(p) => p.theme.typography.bodyFontWeightMedium};
+  opacity: 0.9;
+  letter-spacing: 1px;
+`;
+
+const MainContent = styled.main`
   width: 100%;
   max-width: 1200px;
-  padding: ${(p) => p.theme.spacing.lg}px;
+  padding: ${(p) => p.theme.spacing.xl}px ${(p) => p.theme.spacing.lg}px;
   flex: 1;
 `;
 
-// ======== MAIN APP ========
-function App() {
-  const [section, setSection] = useState<string | null>(null);
+const SectionHeader = styled.div`
+  text-align: center;
+  margin-bottom: ${(p) => p.theme.spacing.xl}px;
+`;
 
-  const handleNavigate = (sectionId: string) => {
-    setSection(sectionId);
-  };
+const SectionTitle = styled.h2`
+  font-family: ${(p) => p.theme.typography.headingFont};
+  color: ${(p) => p.theme.colors.accent};
+  margin-bottom: ${(p) => p.theme.spacing.sm}px;
+`;
 
-  const renderSection = () => {
-    switch (section) {
-      case "family-album":
-        return <FamilyAlbumSection />;
-      case "health":
-        return <HealthSection />;
-      case "finances":
-        return <FinancesSection />;
-      case "education":
-        return <EducationSection />;
-      case "events":
-        return <EventsSection />;
-      case "about":
-        return <AboutSection />;
-      default:
-        return <ServicesSection />;
-    }
-  };
+const SectionSubtitle = styled.p`
+  color: ${(p) => p.theme.colors.textSecondary};
+  max-width: 600px;
+  margin: 0 auto;
+`;
 
+const TileLink = styled(Link)`
+  text-decoration: none;
+  display: contents;
+`;
+
+export default function HomePage() {
   return (
     <ThemeProvider theme={tokens}>
       <GlobalStyle />
       <AppContainer>
-        <Header />
+        <Navigation />
+        <HeroSection>
+          <HeroContent>
+            <HeroTitle>Corbin United Inc.</HeroTitle>
+            <HeroSubtitle>
+              Focusing on Family Health, History and Enhancing our Well-Being
+            </HeroSubtitle>
+            <HeroTagline>
+              A 501(c)(3) Organization • Family Focused - Health Driven
+            </HeroTagline>
+          </HeroContent>
+        </HeroSection>
+        <HeroCarousel />
         <MainContent>
-          {!section && (
-            <SectionTiles>
-              {SECTION_LIST.map((sec) => (
-                <Tile
-                  key={sec.key}
-                  onClick={() => handleNavigate(sec.key)}
-                  aria-label={`Navigate to ${sec.label}`}
-                >
+          <SectionHeader>
+            <SectionTitle>Our Services</SectionTitle>
+            <SectionSubtitle>
+              Explore the resources and support we offer to strengthen our
+              community
+            </SectionSubtitle>
+          </SectionHeader>
+          <SectionTiles>
+            {SECTION_LIST.map((sec) => (
+              <TileLink key={sec.key} href={`/${sec.key}`}>
+                <Tile as="div" aria-label={`Navigate to ${sec.label}`}>
                   <TileIcon>{sec.icon}</TileIcon>
                   <h3>{sec.label}</h3>
                   <p>{sec.desc}</p>
                 </Tile>
-              ))}
-            </SectionTiles>
-          )}
-          {section && (
-            <>
-              <button
-                onClick={() => setSection(null)}
-                style={{
-                  marginBottom: tokens.spacing.lg,
-                  padding: `${tokens.spacing.sm}px ${tokens.spacing.md}px`,
-                  background: tokens.colors.accent,
-                  color: tokens.colors.surface,
-                  border: "none",
-                  borderRadius: tokens.radii.medium,
-                  cursor: "pointer",
-                  fontFamily: tokens.typography.fontFamily,
-                  fontSize: tokens.typography.fontSize,
-                }}
-              >
-                ← Back to Home
-              </button>
-              {renderSection()}
-            </>
-          )}
+              </TileLink>
+            ))}
+          </SectionTiles>
         </MainContent>
-        <Footer onNavigate={handleNavigate} />
+        <Footer />
       </AppContainer>
     </ThemeProvider>
   );
 }
-
-export default App;
