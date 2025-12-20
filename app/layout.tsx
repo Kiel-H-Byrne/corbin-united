@@ -1,3 +1,4 @@
+import { AppProviders } from "@/components/layout/AppProviders";
 import { tokens } from "@/lib/theme";
 import type { Metadata } from "next";
 import { Playfair_Display, Source_Sans_3 } from "next/font/google";
@@ -47,7 +48,7 @@ export default function RootLayout({
             --theme-foreground: ${tokens.colors.text};
           }
         `}</style>
-        {children}
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

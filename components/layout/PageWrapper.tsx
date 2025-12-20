@@ -2,9 +2,7 @@
 
 import { Footer } from "@/components/layout/Footer";
 import { Navigation } from "@/components/layout/Navigation";
-import { tokens } from "@/lib/theme";
-import { GlobalStyle } from "@/styles/GlobalStyle";
-import styled, { ThemeProvider } from "styled-components";
+import styled from "styled-components";
 
 const AppContainer = styled.div.attrs({
   "data-component": "AppContainer",
@@ -23,7 +21,7 @@ const MainContent = styled.main.attrs({
   max-width: 1200px;
   padding: ${(p) => p.theme.spacing.lg}px;
   flex: 1;
-  
+
   @media (max-width: 768px) {
     padding: ${(p) => p.theme.spacing.md}px;
   }
@@ -34,16 +32,15 @@ type PageWrapperProps = {
   showBackButton?: boolean;
 };
 
-export function PageWrapper({ children, showBackButton = true }: PageWrapperProps) {
+export function PageWrapper({
+  children,
+  showBackButton = true,
+}: PageWrapperProps) {
   return (
-    <ThemeProvider theme={tokens}>
-      <GlobalStyle />
-      <AppContainer>
-        <Navigation />
-        <MainContent>{children}</MainContent>
-        <Footer />
-      </AppContainer>
-    </ThemeProvider>
+    <AppContainer>
+      <Navigation />
+      <MainContent>{children}</MainContent>
+      <Footer />
+    </AppContainer>
   );
 }
-

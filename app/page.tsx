@@ -5,10 +5,8 @@ import { HeroCarousel } from "@/components/layout/HeroCarousel";
 import { Navigation } from "@/components/layout/Navigation";
 import { SectionTiles, Tile, TileIcon } from "@/components/ui/Tile";
 import { SECTION_LIST } from "@/data/sections";
-import { tokens } from "@/lib/theme";
-import { GlobalStyle } from "@/styles/GlobalStyle";
 import Link from "next/link";
-import styled, { ThemeProvider } from "styled-components";
+import styled from "styled-components";
 
 const AppContainer = styled.div`
   display: flex;
@@ -87,47 +85,44 @@ const TileLink = styled(Link)`
 
 export default function HomePage() {
   return (
-    <ThemeProvider theme={tokens}>
-      <GlobalStyle />
-      <AppContainer>
-        <Navigation />
-        <HeroSection>
-          <HeroContent>
-            <HeroTitle>Corbin United, Inc.</HeroTitle>
-            <HeroSubtitle>
-              Focusing on Family Health, History and Enhancing our Well-Being
-            </HeroSubtitle>
-            <HeroTagline>
-              A 501(c)(3) Organization • Family Focused - Health Driven
-            </HeroTagline>
-            <HeroTagline>
-              Early, Maddox, Corbin, Oneal, Crippen, Conix
-            </HeroTagline>
-          </HeroContent>
-        </HeroSection>
-        <HeroCarousel />
-        <MainContent>
-          <SectionHeader>
-            <SectionTitle>Our Services</SectionTitle>
-            <SectionSubtitle>
-              Explore the resources and support we offer to strengthen our
-              community
-            </SectionSubtitle>
-          </SectionHeader>
-          <SectionTiles>
-            {SECTION_LIST.map((sec) => (
-              <TileLink key={sec.key} href={`/${sec.key}`}>
-                <Tile as="div" aria-label={`Navigate to ${sec.label}`}>
-                  <TileIcon>{sec.icon}</TileIcon>
-                  <h3>{sec.label}</h3>
-                  <p>{sec.desc}</p>
-                </Tile>
-              </TileLink>
-            ))}
-          </SectionTiles>
-        </MainContent>
-        <Footer />
-      </AppContainer>
-    </ThemeProvider>
+    <AppContainer>
+      <Navigation />
+      <HeroSection>
+        <HeroContent>
+          <HeroTitle>Corbin United, Inc.</HeroTitle>
+          <HeroSubtitle>
+            Focusing on Family Health, History and Enhancing our Well-Being
+          </HeroSubtitle>
+          <HeroTagline>
+            A 501(c)(3) Organization • Family Focused - Health Driven
+          </HeroTagline>
+          <HeroTagline>
+            Early, Maddox, Corbin, Oneal, Crippen, Conix
+          </HeroTagline>
+        </HeroContent>
+      </HeroSection>
+      <HeroCarousel />
+      <MainContent>
+        <SectionHeader>
+          <SectionTitle>Our Services</SectionTitle>
+          <SectionSubtitle>
+            Explore the resources and support we offer to strengthen our
+            community
+          </SectionSubtitle>
+        </SectionHeader>
+        <SectionTiles>
+          {SECTION_LIST.map((sec) => (
+            <TileLink key={sec.key} href={`/${sec.key}`}>
+              <Tile as="div" aria-label={`Navigate to ${sec.label}`}>
+                <TileIcon>{sec.icon}</TileIcon>
+                <h3>{sec.label}</h3>
+                <p>{sec.desc}</p>
+              </Tile>
+            </TileLink>
+          ))}
+        </SectionTiles>
+      </MainContent>
+      <Footer />
+    </AppContainer>
   );
 }
