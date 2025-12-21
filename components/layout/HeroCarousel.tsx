@@ -3,7 +3,7 @@
 import { HERO_CAROUSEL } from "@/data/events";
 import { HeroCarouselItem } from "@/types";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const CarouselRoot = styled.div`
@@ -90,8 +90,12 @@ const DotsContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: ${(p) => p.theme.spacing.md}px;
+  padding: ${(p) => p.theme.spacing.sm}px;
   z-index: 1;
+
+  @media (min-width: 768px) {
+    padding: ${(p) => p.theme.spacing.md}px;
+  }
 `;
 
 const ControlsInner = styled.div`
@@ -133,9 +137,10 @@ const Dot = styled.button`
   }
 `;
 
-const NavButton = styled.button`
+const NavButton = styled.button<{ $position: "left" | "right" }>`
   position: absolute;
   top: 50%;
+  ${(p) => (p.$position === "left" ? "left: 16px;" : "right: 16px;")};
   transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
@@ -150,10 +155,42 @@ const NavButton = styled.button`
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 
+  @media (max-width: 767px) {
+    width: 32px;
+    height: 32px;
+    ${(p) => (p.$position === "left" ? "left: 8px;" : "right: 8px;")};
+  }
+
   &:hover {
     background: ${(p) => p.theme.colors.accent};
     color: ${(p) => p.theme.colors.surface};
     transform: translateY(-50%) scale(1.03);
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${(p) => p.theme.colors.accent};
+    outline-offset: 2px;
+  }
+`;
+
+const PausePlayButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: ${(p) => p.theme.colors.surface};
+  color: ${(p) => p.theme.colors.accent};
+  box-shadow: ${(p) => p.theme.shadows.sm};
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    background: ${(p) => p.theme.colors.accent};
+    color: ${(p) => p.theme.colors.surface};
+    transform: scale(1.03);
   }
 
   &:focus-visible {
@@ -221,8 +258,50 @@ const CarouselItem = ({ item, isActive, index, total }: CarouselItemProps) => {
 
 export const HeroCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isPausedByUser, setIsPausedByUser] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(true);
+
   const total = HERO_CAROUSEL.length;
   const activeItem = HERO_CAROUSEL[activeIndex];
+
+  useEffect(() => {
+    if (
+      typeof window === "undefined" ||
+      typeof window.matchMedia !== "function"
+    ) {
+      setPrefersReducedMotion(false);
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      setPrefersReducedMotion(event.matches);
+    };
+
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
+
+    mediaQuery.addListener(handleChange);
+    return () => mediaQuery.removeListener(handleChange);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion || isPausedByUser || isInteracting || total <= 1) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % total);
+    }, 6000);
+
+    return () => window.clearInterval(interval);
+  }, [prefersReducedMotion, isPausedByUser, isInteracting, total]);
 
   const goToIndex = (index: number) => {
     setActiveIndex((index + total) % total);
@@ -251,6 +330,14 @@ export const HeroCarousel = () => {
           goPrev();
         }
       }}
+      onMouseEnter={() => setIsInteracting(true)}
+      onMouseLeave={() => setIsInteracting(false)}
+      onFocus={() => setIsInteracting(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          setIsInteracting(false);
+        }
+      }}
     >
       <CarouselItem
         key={activeItem.title}
@@ -264,7 +351,7 @@ export const HeroCarousel = () => {
         <>
           <NavButton
             type="button"
-            style={{ left: 16 }}
+            $position="left"
             onClick={goPrev}
             aria-label="Previous slide"
           >
@@ -272,7 +359,7 @@ export const HeroCarousel = () => {
           </NavButton>
           <NavButton
             type="button"
-            style={{ right: 16 }}
+            $position="right"
             onClick={goNext}
             aria-label="Next slide"
           >
@@ -284,6 +371,15 @@ export const HeroCarousel = () => {
       {total > 1 && (
         <DotsContainer aria-label="Carousel pagination">
           <ControlsInner>
+            <PausePlayButton
+              type="button"
+              onClick={() => setIsPausedByUser((prev) => !prev)}
+              aria-label={
+                isPausedByUser ? "Resume auto-advance" : "Pause auto-advance"
+              }
+            >
+              {isPausedByUser ? "▶" : "❚❚"}
+            </PausePlayButton>
             <SlideIndicator>
               Slide {activeIndex + 1} of {total}
             </SlideIndicator>
