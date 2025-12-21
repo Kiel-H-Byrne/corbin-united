@@ -13,6 +13,7 @@ import { FINANCES_RESOURCES } from "@/data/resources";
 import { BillForm } from "@/types";
 import { useRef, useState } from "react";
 import styled from "styled-components";
+import { ComingSoon } from "../ui/ComingSoon";
 
 const LeaderImg = styled.img.attrs({ "data-component": "LeaderImg" } as any)`
   width: 72px;
@@ -36,55 +37,60 @@ export function FinancesSection() {
   const billSuccessRef = useRef<HTMLDivElement>(null);
 
   return (
-    <ContentSection data-component="FinancesSection">
-      <SectionTitle>Financial Information</SectionTitle>
-      <SectionText>
-        Meet our financial advisor:
-        <br />
-        <b>{professional.name}</b> – {professional.email}
-        <br />
-        <ExpertTitle>{professional.title}</ExpertTitle>
-      </SectionText>
-      <LeaderImg src={professional.img} alt={professional.name} />
-      <SectionText>Download financial resources:</SectionText>
-      {FINANCES_RESOURCES.map((r) => (
-        <ResourceTile key={r.title} href={r.url} aria-label={r.title}>
-          <span aria-hidden="true">{r.icon}</span> {r.title}
-        </ResourceTile>
-      ))}
-      <SectionText>
-        Need help with bills? <b>Request assistance</b> or support our
-        fundraising efforts below.
-      </SectionText>
-      <BillAssistanceForm
-        form={billForm}
-        setForm={setBillForm}
-        onSuccess={() => {
-          setBillSuccess(true);
-          setTimeout(() => setBillSuccess(false), 4000);
-          setBillForm(initialBillForm);
-          billSuccessRef.current?.focus();
-        }}
-        success={billSuccess}
-        successRef={billSuccessRef}
-      />
-      <SectionText>Support our mission:</SectionText>
-      <Button
-        href="https://paypal.me/yourfoundation"
-        target="_blank"
-        rel="noopener"
-        aria-label="Donate with PayPal"
-      >
-        Donate with PayPal
-      </Button>
-      <Button
-        href="https://cash.app/$CorbinUnited"
-        target="_blank"
-        rel="noopener"
-        aria-label="Donate with Cash App"
-      >
-        Donate with Cash App
-      </Button>
-    </ContentSection>
+    <ComingSoon
+      title="Finances"
+      message="Finances details for this year are being finalized."
+    >
+      <ContentSection data-component="FinancesSection">
+        <SectionTitle>Financial Information</SectionTitle>
+        <SectionText>
+          Meet our financial advisor:
+          <br />
+          <b>{professional.name}</b> – {professional.email}
+          <br />
+          <ExpertTitle>{professional.title}</ExpertTitle>
+        </SectionText>
+        <LeaderImg src={professional.img} alt={professional.name} />
+        <SectionText>Download financial resources:</SectionText>
+        {FINANCES_RESOURCES.map((r) => (
+          <ResourceTile key={r.title} href={r.url} aria-label={r.title}>
+            <span aria-hidden="true">{r.icon}</span> {r.title}
+          </ResourceTile>
+        ))}
+        <SectionText>
+          Need help with bills? <b>Request assistance</b> or support our
+          fundraising efforts below.
+        </SectionText>
+        <BillAssistanceForm
+          form={billForm}
+          setForm={setBillForm}
+          onSuccess={() => {
+            setBillSuccess(true);
+            setTimeout(() => setBillSuccess(false), 4000);
+            setBillForm(initialBillForm);
+            billSuccessRef.current?.focus();
+          }}
+          success={billSuccess}
+          successRef={billSuccessRef}
+        />
+        <SectionText>Support our mission:</SectionText>
+        <Button
+          href="https://paypal.me/yourfoundation"
+          target="_blank"
+          rel="noopener"
+          aria-label="Donate with PayPal"
+        >
+          Donate with PayPal
+        </Button>
+        <Button
+          href="https://cash.app/$CorbinUnited"
+          target="_blank"
+          rel="noopener"
+          aria-label="Donate with Cash App"
+        >
+          Donate with Cash App
+        </Button>
+      </ContentSection>
+    </ComingSoon>
   );
 }

@@ -14,10 +14,16 @@ const ComingSoonBlock = styled.div`
   font-family: "Merriweather", serif;
   font-size: ${(p) => p.theme.typography.h6Size}px;
   box-shadow: ${(p) => p.theme.cardShadow};
-
   &.disabled {
     pointer-events: none;
     opacity: 0.7;
+  }
+  &.icon {
+    height: 72px;
+    width: 72px;
+    display: flex;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: ${(p) => p.theme.radii.full}px;
   }
 `;
 
@@ -80,8 +86,8 @@ const IconWrapper = styled.div<{ onlyIcon?: boolean }>`
 
   svg {
     display: block;
-    max-width: 40%;
-    max-height: 40%;
+    max-width: 100%;
+    max-height: 100%;
   }
 `;
 
@@ -103,25 +109,31 @@ export function ComingSoon({
   const hasTextContent = title || titleComponent || message;
 
   return (
-    <ComingSoonBlock className="disabled">
-      <ComingSoonOverlay>
-        {icon && <IconWrapper onlyIcon={!hasTextContent}>{icon}</IconWrapper>}
+    <>
+      {icon && (
+        <ComingSoonBlock className="disabled icon">
+          <IconWrapper onlyIcon={!hasTextContent}>{icon}</IconWrapper>
+        </ComingSoonBlock>
+      )}
+      {!icon && (
+        <ComingSoonBlock className="disabled">
+          <ComingSoonOverlay>
+            <OverlayHeading>Launching Soon...</OverlayHeading>
 
-        {!icon && <OverlayHeading>Launching Soon...</OverlayHeading>}
+            {/* {icon && hasTextContent && (
+            <OverlayHeading>Launching Soon...</OverlayHeading>
+          )} */}
 
-        {icon && hasTextContent && (
-          <OverlayHeading>Launching Soon...</OverlayHeading>
-        )}
+            {titleComponent
+              ? titleComponent
+              : title && <OverlayTitle>{title}</OverlayTitle>}
 
-        {titleComponent
-          ? titleComponent
-          : title && <OverlayTitle>{title}</OverlayTitle>}
+            {message && <OverlayMessage>{message}</OverlayMessage>}
+          </ComingSoonOverlay>
 
-        {message && <OverlayMessage>{message}</OverlayMessage>}
-      </ComingSoonOverlay>
-
-      {children}
-    </ComingSoonBlock>
+          {children}
+        </ComingSoonBlock>
+      )}
+    </>
   );
 }
-
