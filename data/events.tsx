@@ -98,4 +98,17 @@ export const HERO_CAROUSEL: HeroCarouselItem[] = [
     aspect: "9:16",
     url: "/events/BOCRaffle_2025.JPEG",
   },
+  {
+    title: "New Years Cabaret",
+    textContent: {
+      message:
+        "Ring in the New Year with style, soul, and unforgettable vibes at the 2025 New Year's Eve Cabaret! Join us for a night of celebration, community, music, and elegance as we count down to midnight together.",
+      signature: {
+        name: "This is more than a party — it's a New Year's experience. Dress to impress, bring your friends, and step into 2025 surrounded by great people, great energy, and unforgettable moments.",
+      },
+    },
+    type: "image",
+    aspect: "9:16",
+    url: "/events/NYCabaret_2025.png",
+  },
 ];
