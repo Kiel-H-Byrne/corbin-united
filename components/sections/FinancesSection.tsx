@@ -74,21 +74,21 @@ export function FinancesSection() {
           successRef={billSuccessRef}
         />
         <SectionText>Support our mission:</SectionText>
-        <Button
+        {/* <Button
           href="https://paypal.me/yourfoundation"
           target="_blank"
           rel="noopener"
           aria-label="Donate with PayPal"
         >
           Donate with PayPal
-        </Button>
+        </Button> */}
         <Button
           href="https://cash.app/$CorbinUnited"
           target="_blank"
           rel="noopener"
           aria-label="Donate with Cash App"
         >
-          Donate with Cash App
+          Donate with Cash App (All donations are tax-deductible)
         </Button>
       </ContentSection>
     </ComingSoon>

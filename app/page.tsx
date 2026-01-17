@@ -97,7 +97,7 @@ export default function HomePage() {
             A 501(c)(3) Organization • Family Focused - Health Driven
           </HeroTagline>
           <HeroTagline>
-            Early, Maddox, Corbin, Oneal, Crippen, Conix
+            Early, Maddox, Corbin, Oneal, Crippen, Conix, Fooks, Jordan
           </HeroTagline>
         </HeroContent>
       </HeroSection>

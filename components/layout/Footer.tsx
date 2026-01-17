@@ -181,13 +181,13 @@ export function Footer() {
             <FooterTitle>Contact Us</FooterTitle>
             <ContactItem>
               <span>📧</span>
-              <span>info@corbinunitedinc.org</span>
+              <span>corbinunited2025@gmail.com</span>
             </ContactItem>
             <ContactItem>
               <span>📞</span>
-              <span>(555) 123-4567</span>
+              <span>(301) 267-2173</span>
             </ContactItem>
-            <SocialLinks>
+            {/* <SocialLinks>
               <SocialLink href="#" aria-label="Facebook">
                 f
               </SocialLink>
@@ -197,7 +197,7 @@ export function Footer() {
               <SocialLink href="#" aria-label="Twitter">
                 𝕏
               </SocialLink>
-            </SocialLinks>
+            </SocialLinks> */}
           </FooterCol>
         </FooterGrid>
 

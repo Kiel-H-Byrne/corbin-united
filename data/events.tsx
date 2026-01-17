@@ -63,13 +63,13 @@ export const UPCOMING_EVENTS: Event[] = [
 
 export const PAST_EVENTS: PastEvent[] = [
   {
-    title: "Spring Fundraiser",
-    img: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
+    title: "Basket of Cheer Raffle 2025",
+    img: "/events/BOCRaffle_2025.JPEG",
   },
-  {
-    title: "Community Picnic",
-    img: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80",
-  },
+  // {
+  //   title: "Community Picnic",
+  //   img: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80",
+  // },
 ];
 
 export const HERO_CAROUSEL: HeroCarouselItem[] = [

@@ -1,8 +1,11 @@
 "use client";
 
+import {
+  ContentSection,
+  SectionText,
+  SectionTitle,
+} from "@/components/ui/Section";
 import { tokens } from "@/lib/theme";
-import { Button } from "@/components/ui/Button";
-import { ContentSection, SectionTitle, SectionText } from "@/components/ui/Section";
 
 export function FundraisingSpotlight() {
   return (
@@ -15,16 +18,15 @@ export function FundraisingSpotlight() {
         <b>Spring Fundraiser</b>: Help us reach our goal to support more
         families!
         <br />
-        <Button
-          href="https://paypal.me/yourfoundation"
+        {/* <Button
+          href="https://paypal.me/corbinunited"
           target="_blank"
           rel="noopener"
           aria-label="Donate with PayPal"
         >
           Donate Now
-        </Button>
+        </Button> */}
       </SectionText>
     </ContentSection>
   );
 }
-
