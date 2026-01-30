@@ -189,7 +189,14 @@ const CarouselItem = ({ item, isActive, index, total }: CarouselItemProps) => {
         }}
       >
         {type === "video" ? (
-          <video src={url} autoPlay muted loop playsInline controls />
+          <video
+            src={url}
+            controls
+            preload="metadata"
+            playsInline
+            autoPlay
+            loop
+          />
         ) : (
           <Image
             src={url}

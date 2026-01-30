@@ -101,3 +101,28 @@ export type HeroCarouselItem = {
   aspect: string;
   url: string;
 };
+
+export type FooterText = {
+  id: string;
+  aboutTitle: string;
+  aboutBody: string;
+  missionText?: string;
+  copyrightText?: string;
+};
+
+export type FooterContact = {
+  id: string;
+  email?: string;
+  phone?: string;
+};
+
+export type CtaSection = {
+  id: string;
+  key: string;
+  headline: string;
+  buttonLabel: string;
+  modalTitle?: string;
+  modalBody: string;
+  contactEmail: string;
+  active?: boolean;
+};

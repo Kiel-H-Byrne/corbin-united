@@ -93,10 +93,6 @@ export function EducationSection() {
   }, [getPdfDocuments, getProfessionals, getSections]);
 
   return (
-    <ComingSoon
-      title="Scholarship"
-      message="Scholarship details for this year are being finalized."
-    >
       <ContentSection data-component="EducationSection">
         <SectionTitle>{title}</SectionTitle>
         {!!professional.name && (
@@ -137,6 +133,5 @@ export function EducationSection() {
           successRef={schSuccessRef}
         />
       </ContentSection>
-    </ComingSoon>
   );
 }

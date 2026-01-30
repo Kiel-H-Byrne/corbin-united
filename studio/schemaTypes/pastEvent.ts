@@ -1,3 +1,5 @@
+import { UrlImagePreviewInput } from "../components/UrlImagePreviewInput";
+
 export default {
   name: "pastEvent",
   title: "Past Event",
@@ -13,6 +15,9 @@ export default {
       name: "img",
       title: "Image URL",
       type: "url",
+      components: {
+        input: UrlImagePreviewInput,
+      },
     },
   ],
 };

@@ -1,3 +1,5 @@
+import { UrlImagePreviewInput } from "../components/UrlImagePreviewInput";
+
 export default {
   name: "heroCarouselItem",
   title: "Hero Carousel Item",
@@ -28,6 +30,15 @@ export default {
       validation: (Rule: any) => Rule.required(),
     },
     {
+      name: "mediaFile",
+      title: "Media File",
+      type: "file",
+      description: "Upload a video file (3gp supported). Takes precedence over URL.",
+      options: {
+        accept: "video/*,.3gp",
+      },
+    },
+    {
       name: "aspect",
       title: "Aspect",
       type: "string",
@@ -37,7 +48,17 @@ export default {
       name: "url",
       title: "Media URL",
       type: "url",
-      validation: (Rule: any) => Rule.required(),
+      components: {
+        input: UrlImagePreviewInput,
+      },
+      validation: (Rule: any) =>
+        Rule.custom((value: any, context: any) => {
+          const mediaFile = context?.parent?.mediaFile;
+          if (value || mediaFile) {
+            return true;
+          }
+          return "Provide a media URL or upload a media file.";
+        }),
     },
   ],
 };

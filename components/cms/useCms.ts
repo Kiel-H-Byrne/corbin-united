@@ -10,6 +10,9 @@ import {
   fetchEvents,
   fetchPastEvents,
   fetchHeroCarouselItems,
+  fetchFooterText,
+  fetchFooterContact,
+  fetchCtaSection,
 } from "./content";
 import {
   type Album,
@@ -20,6 +23,9 @@ import {
   type Event,
   type PastEvent,
   type HeroCarouselItem,
+  type FooterText,
+  type FooterContact,
+  type CtaSection,
 } from "./types";
 
 export function useCms() {
@@ -87,6 +93,21 @@ export function useCms() {
     [run]
   );
 
+  const getFooterText = useCallback(
+    () => run<FooterText | null>(() => fetchFooterText()),
+    [run]
+  );
+
+  const getFooterContact = useCallback(
+    () => run<FooterContact | null>(() => fetchFooterContact()),
+    [run]
+  );
+
+  const getCtaSection = useCallback(
+    (key: string) => run<CtaSection | null>(() => fetchCtaSection(key)),
+    [run]
+  );
+
   return {
     loading,
     error,
@@ -100,5 +121,8 @@ export function useCms() {
     getEvents,
     getPastEvents,
     getHeroCarouselItems,
+    getFooterText,
+    getFooterContact,
+    getCtaSection,
   };
 }

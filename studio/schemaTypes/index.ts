@@ -12,6 +12,9 @@ import paymentAmount from "./paymentAmount";
 import paymentOption from "./paymentOption";
 import heroTextContent from "./heroTextContent";
 import heroSignature from "./heroSignature";
+import footerText from "./footerText";
+import footerContact from "./footerContact";
+import ctaSection from "./ctaSection";
 
 export const schemaTypes = [
     album,
@@ -28,4 +31,7 @@ export const schemaTypes = [
     paymentOption,
     heroTextContent,
     heroSignature,
+    footerText,
+    footerContact,
+    ctaSection,
 ]

@@ -9,6 +9,9 @@ import {
   type Event,
   type PastEvent,
   type HeroCarouselItem,
+  type FooterText,
+  type FooterContact,
+  type CtaSection,
 } from "./types";
 
 export async function fetchPdfDocuments(
@@ -113,7 +116,7 @@ export async function fetchProfessionals(): Promise<Professional[]> {
 export async function fetchEvents(): Promise<Event[]> {
   return sanityClient.fetch(
     `
-    *[_type == "event"] | order(date desc){
+    *[_type == "event" && isActive == true] | order(date desc){
       "id": _id,
       title,
       date,
@@ -155,8 +158,57 @@ export async function fetchHeroCarouselItems(): Promise<HeroCarouselItem[]> {
       textContent,
       type,
       aspect,
-      url
+      "url": select(
+        defined(mediaFile.asset->url) => mediaFile.asset->url,
+        defined(url) => url
+      )
     }
     `
+  );
+}
+
+export async function fetchFooterText(): Promise<FooterText | null> {
+  return sanityClient.fetch(
+    `
+    *[_type == "footerText"][0]{
+      "id": _id,
+      aboutTitle,
+      aboutBody,
+      missionText,
+      copyrightText
+    }
+    `
+  );
+}
+
+export async function fetchFooterContact(): Promise<FooterContact | null> {
+  return sanityClient.fetch(
+    `
+    *[_type == "footerContact"][0]{
+      "id": _id,
+      email,
+      phone
+    }
+    `
+  );
+}
+
+export async function fetchCtaSection(
+  key: string
+): Promise<CtaSection | null> {
+  return sanityClient.fetch(
+    `
+    *[_type == "ctaSection" && key == $key && active == true][0]{
+      "id": _id,
+      key,
+      headline,
+      buttonLabel,
+      modalTitle,
+      modalBody,
+      contactEmail,
+      active
+    }
+    `,
+    { key }
   );
 }

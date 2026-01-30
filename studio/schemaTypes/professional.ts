@@ -1,3 +1,5 @@
+import { UrlImagePreviewInput } from "../components/UrlImagePreviewInput";
+
 export default {
   name: "professional",
   title: "Professional",
@@ -31,6 +33,9 @@ export default {
       name: "img",
       title: "Image URL",
       type: "url",
+      components: {
+        input: UrlImagePreviewInput,
+      },
     },
     {
       name: "title",

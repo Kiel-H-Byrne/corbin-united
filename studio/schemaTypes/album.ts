@@ -1,4 +1,5 @@
 // schemas/album.ts
+import { UrlImagePreviewInput } from "../components/UrlImagePreviewInput";
 export default {
   name: "album",
   title: "Album",
@@ -39,7 +40,14 @@ export default {
       name: "imageUrls",
       title: "Image Links",
       type: "array",
-      of: [{ type: "url" }],
+      of: [
+        {
+          type: "url",
+          components: {
+            input: UrlImagePreviewInput,
+          },
+        },
+      ],
       description: "Optional external image URLs when no images are uploaded.",
     },
     {

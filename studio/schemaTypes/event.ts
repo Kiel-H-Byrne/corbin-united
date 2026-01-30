@@ -1,13 +1,24 @@
+import { UrlImagePreviewInput } from "../components/UrlImagePreviewInput";
+
 export default {
   name: "event",
   title: "Event",
   type: "document",
+  initialValue: {
+    isActive: true,
+  },
   fields: [
     {
       name: "title",
       title: "Title",
       type: "string",
       validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: "isActive",
+      title: "Active",
+      type: "boolean",
+      description: "Only active events are shown in the app.",
     },
     {
       name: "date",
@@ -35,11 +46,17 @@ export default {
       name: "img",
       title: "Image URL",
       type: "url",
+      components: {
+        input: UrlImagePreviewInput,
+      },
     },
     {
       name: "thumbnailUrl",
       title: "Thumbnail URL",
       type: "url",
+      components: {
+        input: UrlImagePreviewInput,
+      },
     },
     {
       name: "descLists",
