@@ -1,0 +1,6 @@
+{"_id":"section-health","_type":"section","key":"health","label":"Health Information","iconName":"heart","desc":"Resources, experts, and health info."}
+{"_id":"section-finances","_type":"section","key":"finances","label":"Financial Information","iconName":"finance","desc":"Bill help, fundraising, donations."}
+{"_id":"section-education","_type":"section","key":"education","label":"Scholarship Information","iconName":"education","desc":"Scholarships and learning."}
+{"_id":"section-events","_type":"section","key":"events","label":"Upcoming Events","iconName":"events","desc":"Upcoming and past events."}
+{"_id":"section-about","_type":"section","key":"about","label":"Corbin United Inc. Officers","iconName":"people","desc":"About us, leadership, mission."}
+{"_id":"section-family-album","_type":"section","key":"family-album","label":"Family Album","iconName":"album","desc":"Memories in picture form."}

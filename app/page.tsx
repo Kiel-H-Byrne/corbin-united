@@ -4,8 +4,18 @@ import { Footer } from "@/components/layout/Footer";
 import { HeroCarousel } from "@/components/layout/HeroCarousel";
 import { Navigation } from "@/components/layout/Navigation";
 import { SectionTiles, Tile, TileIcon } from "@/components/ui/Tile";
-import { SECTION_LIST } from "@/data/sections";
+import {
+  AlbumIcon,
+  EducationIcon,
+  EventsIcon,
+  FinanceIcon,
+  HeartIcon,
+  PeopleIcon,
+} from "@/components/icons";
+import { useCms } from "@/components/cms/useCms";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import type React from "react";
 import styled from "styled-components";
 
 const AppContainer = styled.div`
@@ -84,6 +94,39 @@ const TileLink = styled(Link)`
 `;
 
 export default function HomePage() {
+  const { getSections } = useCms();
+  const [sections, setSections] = useState<
+    { key: string; label: string; desc: string; icon: React.ReactNode }[]
+  >([]);
+
+  useEffect(() => {
+    let active = true;
+
+    getSections().then((cmsSections) => {
+      if (!active) return;
+      if (!cmsSections || cmsSections.length === 0) return;
+      const iconMap: Record<string, React.ReactNode> = {
+        heart: <HeartIcon />,
+        finance: <FinanceIcon />,
+        education: <EducationIcon />,
+        events: <EventsIcon />,
+        people: <PeopleIcon />,
+        album: <AlbumIcon />,
+      };
+      const mapped = cmsSections.map((sec) => ({
+        key: sec.key,
+        label: sec.label,
+        desc: sec.desc,
+        icon: iconMap[sec.iconName] ?? <HeartIcon />,
+      }));
+      setSections(mapped);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [getSections]);
+
   return (
     <AppContainer>
       <Navigation />
@@ -111,7 +154,7 @@ export default function HomePage() {
           </SectionSubtitle>
         </SectionHeader>
         <SectionTiles>
-          {SECTION_LIST.map((sec) => (
+          {sections.map((sec) => (
             <TileLink key={sec.key} href={`/${sec.key}`}>
               <Tile as="div" aria-label={`Navigate to ${sec.label}`}>
                 <TileIcon>{sec.icon}</TileIcon>
