@@ -15,7 +15,6 @@
     "sanity"
   ],
   "dependencies": {
-    "@sanity/desk-tool": "^2.36.2",
     "@sanity/ui": "^3.1.11",
     "@sanity/vision": "^5.2.0",
     "react": "^19.1",
