@@ -242,6 +242,74 @@ export const MailIcon = () => (
   </BaseIcon>
 );
 
+export const CopyIcon = () => (
+  <BaseIcon>
+    <rect
+      x="8"
+      y="8"
+      width="11"
+      height="12"
+      rx="2"
+      ry="2"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+    />
+    <rect
+      x="5"
+      y="4"
+      width="11"
+      height="12"
+      rx="2"
+      ry="2"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+    />
+  </BaseIcon>
+);
+
+export const CameraIcon = () => (
+  <BaseIcon>
+    <rect
+      x="4"
+      y="7"
+      width="16"
+      height="12"
+      rx="2"
+      ry="2"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+    />
+    <circle
+      cx="12"
+      cy="13"
+      r="3"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+    />
+    <path
+      d="M8 7l1.2-2h5.6L16 7"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+  </BaseIcon>
+);
+
+export const XIcon = () => (
+  <BaseIcon>
+    <path
+      d="M5 5l14 14M19 5L5 19"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+  </BaseIcon>
+);
+
 export const ZelleIcon = styled((props: any) => (
   <svg {...props}>
     <path d="M13.559 24h-2.841a0.483 0.483 0 0 1 -0.483 -0.483v-2.765H5.638a0.667 0.667 0 0 1 -0.666 -0.666v-2.234a0.67 0.67 0 0 1 0.142 -0.412l8.139 -10.382h-7.25a0.667 0.667 0 0 1 -0.667 -0.667V3.914c0 -0.367 0.299 -0.666 0.666 -0.666h4.23V0.483c0 -0.266 0.217 -0.483 0.483 -0.483h2.841c0.266 0 0.483 0.217 0.483 0.483v2.765h4.323c0.367 0 0.666 0.299 0.666 0.666v2.137a0.67 0.67 0 0 1 -0.141 0.41l-8.19 10.481h7.665c0.367 0 0.666 0.299 0.666 0.666v2.477a0.667 0.667 0 0 1 -0.666 0.667h-4.32v2.765a0.483 0.483 0 0 1 -0.483 0.483Z" />

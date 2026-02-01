@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import { useCms } from "@/components/cms/useCms";
+import { MailIcon, PhoneIcon, CopyIcon, CameraIcon, XIcon } from "@/components/icons";
 
 const FooterContainer = styled.footer`
   width: 100%;
@@ -150,22 +153,231 @@ const MissionText = styled.p`
   margin: 0;
 `;
 
+const ReminderSection = styled.section`
+  width: 100%;
+  background: ${(p) => p.theme.colors.surfaceAlt};
+  padding: ${(p) => p.theme.spacing.xl}px ${(p) => p.theme.spacing.lg}px;
+`;
+
+const ReminderInner = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${(p) => p.theme.spacing.md}px;
+  text-align: center;
+`;
+
+const ReminderHeadline = styled.h3`
+  font-family: ${(p) => p.theme.typography.headingFont};
+  color: ${(p) => p.theme.colors.accent};
+  font-size: ${(p) => p.theme.typography.h4Size}px;
+  margin: 0;
+`;
+
+const ReminderButton = styled.button`
+  border: none;
+  cursor: pointer;
+  background: ${(p) => p.theme.colors.accent};
+  color: ${(p) => p.theme.colors.surface};
+  padding: ${(p) => p.theme.spacing.sm}px ${(p) => p.theme.spacing.lg}px;
+  border-radius: ${(p) => p.theme.radii.medium}px;
+  font-weight: ${(p) => p.theme.typography.bodyFontWeightMedium};
+  transition: ${(p) => p.theme.transitions.fast};
+
+  &:hover {
+    background: ${(p) => p.theme.colors.accentHover};
+  }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+`;
+
+const ModalCard = styled.div`
+  background: ${(p) => p.theme.colors.surface};
+  color: ${(p) => p.theme.colors.text};
+  border-radius: ${(p) => p.theme.radii.large}px;
+  box-shadow: ${(p) => p.theme.shadows.lg};
+  padding: ${(p) => p.theme.spacing.lg}px;
+  width: min(560px, 92vw);
+`;
+
+const ModalTitle = styled.h4`
+  margin: 0 0 ${(p) => p.theme.spacing.md}px 0;
+  font-family: ${(p) => p.theme.typography.headingFont};
+  color: ${(p) => p.theme.colors.accent};
+`;
+
+const ModalBody = styled.p`
+  margin: 0 0 ${(p) => p.theme.spacing.md}px 0;
+`;
+
+const CopyRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${(p) => p.theme.spacing.sm}px;
+  background: ${(p) => p.theme.colors.surfaceAlt};
+  padding: ${(p) => p.theme.spacing.sm}px ${(p) => p.theme.spacing.md}px;
+  border-radius: ${(p) => p.theme.radii.medium}px;
+  justify-content: space-between;
+`;
+
+const CopyEmail = styled.span`
+  font-weight: ${(p) => p.theme.typography.bodyFontWeightMedium};
+  word-break: break-all;
+`;
+
+const CopyButton = styled.button`
+  border: none;
+  background: ${(p) => p.theme.colors.accent};
+  color: ${(p) => p.theme.colors.surface};
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  position: relative;
+  overflow: visible;
+`;
+
+const CopiedToast = styled.span`
+  position: absolute;
+  right: calc(100% + ${(p) => p.theme.spacing.xs}px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 8px;
+  background: ${(p) => p.theme.colors.surface};
+  color: ${(p) => p.theme.colors.accent};
+  border-radius: ${(p) => p.theme.radii.small}px;
+  border: 1px solid ${(p) => p.theme.colors.border};
+  font-size: ${(p) => p.theme.typography.subscript}px;
+  white-space: nowrap;
+  pointer-events: none;
+`;
+
+const ModalActions = styled.div`
+  margin-top: ${(p) => p.theme.spacing.md}px;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const CloseButton = styled.button`
+  border: none;
+  background: ${(p) => p.theme.colors.surfaceAlt};
+  color: ${(p) => p.theme.colors.text};
+  padding: ${(p) => p.theme.spacing.xs}px ${(p) => p.theme.spacing.md}px;
+  border-radius: ${(p) => p.theme.radii.medium}px;
+  cursor: pointer;
+`;
+
 export function Footer() {
+  const { getFooterText, getFooterContact, getCtaSection } = useCms();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [cta, setCta] = useState<{
+    headline: string;
+    buttonLabel: string;
+    modalTitle?: string;
+    modalBody: string;
+    contactEmail: string;
+  } | null>(null);
+  const [footerText, setFooterText] = useState<{
+    aboutTitle: string;
+    aboutBody: string;
+    missionText?: string;
+    copyrightText?: string;
+  } | null>(null);
+  const [footerContact, setFooterContact] = useState<{
+    email?: string;
+    phone?: string;
+  } | null>(null);
   const currentYear = new Date().getFullYear();
 
+  useEffect(() => {
+    let active = true;
+
+    getFooterText().then((text) => {
+      if (!active) return;
+      if (text) {
+        setFooterText({
+          aboutTitle: text.aboutTitle,
+          aboutBody: text.aboutBody,
+          missionText: text.missionText,
+          copyrightText: text.copyrightText,
+        });
+      }
+    });
+
+    getFooterContact().then((contact) => {
+      if (!active) return;
+      if (contact) {
+        setFooterContact({
+          email: contact.email,
+          phone: contact.phone,
+        });
+      }
+    });
+
+    getCtaSection("suggestion-box").then((section) => {
+      if (!active) return;
+      if (section) {
+        setCta({
+          headline: section.headline,
+          buttonLabel: section.buttonLabel,
+          modalTitle: section.modalTitle,
+          modalBody: section.modalBody,
+          contactEmail: section.contactEmail,
+        });
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [getFooterContact, getFooterText, getCtaSection]);
+
+  if (!footerText && !footerContact && !cta) {
+    return null;
+  }
+
+  const copyright =
+    footerText?.copyrightText?.replace("{year}", String(currentYear)) ??
+    `© ${currentYear} Corbin United Inc. All rights reserved.`;
+
+  const suggestionEmail = cta?.contactEmail ?? "corbinunited2025@gmail.com";
+
   return (
-    <FooterContainer>
-      <FooterInner>
-        <FooterGrid>
-          <FooterCol>
-            <FooterTitle>About Us</FooterTitle>
-            <FooterText>
-              Corbin United Inc. is a 501(c)(3) organization dedicated to
-              improving the health, education, and financial well-being of our
-              community. We are guided by our mission to serve, empower, and
-              uplift every family.
-            </FooterText>
-          </FooterCol>
+    <>
+      {cta && (
+        <ReminderSection>
+          <ReminderInner>
+            <ReminderHeadline>{cta.headline}</ReminderHeadline>
+            <ReminderButton type="button" onClick={() => setIsModalOpen(true)}>
+              {cta.buttonLabel}
+            </ReminderButton>
+          </ReminderInner>
+        </ReminderSection>
+      )}
+      <FooterContainer>
+        <FooterInner>
+          <FooterGrid>
+          {footerText && (
+            <FooterCol>
+              <FooterTitle>{footerText.aboutTitle}</FooterTitle>
+              <FooterText>{footerText.aboutBody}</FooterText>
+            </FooterCol>
+          )}
 
           <FooterCol>
             <FooterTitle>Quick Links</FooterTitle>
@@ -177,37 +389,77 @@ export function Footer() {
             <FooterLink href="/family-album">Family Album</FooterLink>
           </FooterCol>
 
-          <FooterCol>
-            <FooterTitle>Contact Us</FooterTitle>
-            <ContactItem>
-              <span>📧</span>
-              <span>corbinunited2025@gmail.com</span>
-            </ContactItem>
-            <ContactItem>
-              <span>📞</span>
-              <span>(301) 267-2173</span>
-            </ContactItem>
-            {/* <SocialLinks>
-              <SocialLink href="#" aria-label="Facebook">
-                f
-              </SocialLink>
-              <SocialLink href="#" aria-label="Instagram">
-                📷
-              </SocialLink>
-              <SocialLink href="#" aria-label="Twitter">
-                𝕏
-              </SocialLink>
-            </SocialLinks> */}
-          </FooterCol>
+          {footerContact && (
+            <FooterCol>
+              <FooterTitle>Contact Us</FooterTitle>
+              {!!footerContact.email && (
+                <ContactItem>
+                  <MailIcon />
+                  <span>{footerContact.email}</span>
+                </ContactItem>
+              )}
+              {!!footerContact.phone && (
+                <ContactItem>
+                  <PhoneIcon />
+                  <span>{footerContact.phone}</span>
+                </ContactItem>
+              )}
+              {/* <SocialLinks>
+                <SocialLink href="#" aria-label="Facebook">
+                  f
+                </SocialLink>
+                <SocialLink href="#" aria-label="Instagram">
+                  <CameraIcon />
+                </SocialLink>
+                <SocialLink href="#" aria-label="Twitter">
+                  <XIcon />
+                </SocialLink>
+              </SocialLinks> */}
+            </FooterCol>
+          )}
         </FooterGrid>
 
-        <FooterBottom>
-          <Copyright>
-            © {currentYear} Corbin United Inc. All rights reserved.
-          </Copyright>
-          <MissionText>Family Focused - Health Driven</MissionText>
-        </FooterBottom>
-      </FooterInner>
-    </FooterContainer>
+          <FooterBottom>
+            <Copyright>{copyright}</Copyright>
+            {footerText?.missionText && (
+              <MissionText>{footerText.missionText}</MissionText>
+            )}
+          </FooterBottom>
+        </FooterInner>
+      </FooterContainer>
+      {isModalOpen && cta && (
+        <ModalOverlay
+          role="dialog"
+          aria-modal="true"
+          aria-label={cta.modalTitle ?? "Suggestion Box"}
+          onClick={() => setIsModalOpen(false)}
+        >
+          <ModalCard onClick={(e) => e.stopPropagation()}>
+            <ModalTitle>{cta.modalTitle ?? "Suggestion Box"}</ModalTitle>
+            <ModalBody>{cta.modalBody}</ModalBody>
+            <CopyRow>
+              <CopyEmail>{suggestionEmail}</CopyEmail>
+              <CopyButton
+                type="button"
+                aria-label="Copy email"
+                onClick={() => {
+                  navigator.clipboard.writeText(suggestionEmail);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+              >
+                <CopyIcon />
+                {copied && <CopiedToast>Copied!</CopiedToast>}
+              </CopyButton>
+            </CopyRow>
+            <ModalActions>
+              <CloseButton type="button" onClick={() => setIsModalOpen(false)}>
+                Close
+              </CloseButton>
+            </ModalActions>
+          </ModalCard>
+        </ModalOverlay>
+      )}
+    </>
   );
 }

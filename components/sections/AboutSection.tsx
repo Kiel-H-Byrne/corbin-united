@@ -7,7 +7,9 @@ import {
   SectionText,
   SectionTitle,
 } from "@/components/ui/Section";
-import { LEADERSHIP } from "@/data/leadership";
+import { useCms } from "@/components/cms/useCms";
+import { type Leader as CmsLeader } from "@/components/cms/types";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const LeaderGrid = styled.div.attrs({ "data-component": "LeaderGrid" } as any)`
@@ -76,43 +78,86 @@ const ContactLine = styled.div`
 `;
 
 export function AboutSection() {
+  const { getLeaders, getSections } = useCms();
+  const [title, setTitle] = useState("Corbin United Inc. Officers");
+  const [leaders, setLeaders] = useState<
+    { name: string; role: string; img: string; phone: string; email: string }[]
+  >([]);
+
+  useEffect(() => {
+    let active = true;
+    getSections().then((sections) => {
+      if (!active) return;
+      const match = (sections ?? []).find((sec) => sec.key === "about");
+      if (match?.label) {
+        setTitle(match.label);
+      }
+    });
+
+    getLeaders().then((cmsLeaders) => {
+      if (!active) return;
+      if (!cmsLeaders || cmsLeaders.length === 0) return;
+      const mapped = cmsLeaders.map((ldr: CmsLeader) => ({
+        name: ldr.name,
+        role: ldr.role,
+        img: ldr.img ?? "",
+        phone: ldr.phone ?? "",
+        email: ldr.email ?? "",
+      }));
+      setLeaders(mapped);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [getLeaders, getSections]);
+
   const copyToClipboard = (text: string) => {
+    if (!text) return;
     navigator.clipboard.writeText(text);
     // TODO: Add a toast notification for better user feedback
   };
 
   return (
     <ContentSection data-component="AboutSection">
-      <SectionTitle>Corbin United Inc. Officers</SectionTitle>
+      <SectionTitle>{title}</SectionTitle>
       <SectionText>
         Corbin United Inc. is dedicated to improving the health, education, and
         financial well-being of our community. We are guided by our mission to
         serve, empower, and uplift every family.
       </SectionText>
-      <SectionText>Leadership:</SectionText>
-      <LeaderGrid>
-        {LEADERSHIP.map((ldr) => (
-          <LeaderCard key={ldr.name}>
-            {ldr.img !== "" ? (
-              <LeaderImg src={ldr.img} alt={ldr.name} />
-            ) : (
-              <ComingSoon icon={<AvatarIcon />}>
-                <LeaderImg src={ldr.img} alt={ldr.name} />
-              </ComingSoon>
-            )}
-            <LeaderName>{ldr.name}</LeaderName>
-            <LeaderRole>{ldr.role}</LeaderRole>
-            <ContactInfo>
-              <ContactLine onClick={() => copyToClipboard(ldr.phone)}>
-                <PhoneIcon /> {ldr.phone}
-              </ContactLine>
-              <ContactLine onClick={() => copyToClipboard(ldr.email)}>
-                <MailIcon /> {ldr.email}
-              </ContactLine>
-            </ContactInfo>
-          </LeaderCard>
-        ))}
-      </LeaderGrid>
+      {leaders.length > 0 && (
+        <>
+          <SectionText>Leadership:</SectionText>
+          <LeaderGrid>
+            {leaders.map((ldr) => (
+              <LeaderCard key={ldr.name}>
+                {ldr.img !== "" ? (
+                  <LeaderImg src={ldr.img} alt={ldr.name} />
+                ) : (
+                  <ComingSoon icon={<AvatarIcon />}>
+                    <LeaderImg src={ldr.img} alt={ldr.name} />
+                  </ComingSoon>
+                )}
+                <LeaderName>{ldr.name}</LeaderName>
+                <LeaderRole>{ldr.role}</LeaderRole>
+                <ContactInfo>
+                  {!!ldr.phone && (
+                    <ContactLine onClick={() => copyToClipboard(ldr.phone)}>
+                      <PhoneIcon /> {ldr.phone}
+                    </ContactLine>
+                  )}
+                  {!!ldr.email && (
+                    <ContactLine onClick={() => copyToClipboard(ldr.email)}>
+                      <MailIcon /> {ldr.email}
+                    </ContactLine>
+                  )}
+                </ContactInfo>
+              </LeaderCard>
+            ))}
+          </LeaderGrid>
+        </>
+      )}
     </ContentSection>
   );
 }

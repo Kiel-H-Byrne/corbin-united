@@ -1,0 +1,10 @@
+npx sanity dataset import data/family-album.ndjson production --replace
+npx sanity dataset import data/health-resources.ndjson production --replace
+npx sanity dataset import data/education-resources.ndjson production --replace
+npx sanity dataset import data/finances-resources.ndjson production --replace
+npx sanity dataset import data/leadership.ndjson production --replace
+npx sanity dataset import data/professionals.ndjson production --replace
+npx sanity dataset import data/sections.ndjson production --replace
+npx sanity dataset import data/events-upcoming.ndjson production --replace
+npx sanity dataset import data/events-past.ndjson production --replace
+npx sanity dataset import data/hero-carousel.ndjson production --replace

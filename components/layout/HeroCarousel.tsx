@@ -1,9 +1,10 @@
 "use client";
 
-import { HERO_CAROUSEL } from "@/data/events";
+import { useEffect, useState } from "react";
+import { useCms } from "@/components/cms/useCms";
+import { type HeroCarouselItem as CmsHeroCarouselItem } from "@/components/cms/types";
 import { HeroCarouselItem } from "@/types";
 import Image from "next/image";
-import { useState } from "react";
 import styled from "styled-components";
 
 const CarouselRoot = styled.div`
@@ -188,7 +189,14 @@ const CarouselItem = ({ item, isActive, index, total }: CarouselItemProps) => {
         }}
       >
         {type === "video" ? (
-          <video src={url} autoPlay muted loop playsInline controls />
+          <video
+            src={url}
+            controls
+            preload="metadata"
+            playsInline
+            autoPlay
+            loop
+          />
         ) : (
           <Image
             src={url}
@@ -220,9 +228,48 @@ const CarouselItem = ({ item, isActive, index, total }: CarouselItemProps) => {
 };
 
 export const HeroCarousel = () => {
+  const { getHeroCarouselItems } = useCms();
+  const [items, setItems] = useState<HeroCarouselItem[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
-  const total = HERO_CAROUSEL.length;
-  const activeItem = HERO_CAROUSEL[activeIndex];
+
+  useEffect(() => {
+    let active = true;
+    getHeroCarouselItems().then((cmsItems) => {
+      if (!active) return;
+      if (!cmsItems || cmsItems.length === 0) return;
+      const mapped = cmsItems.map((item: CmsHeroCarouselItem) => ({
+        title: item.title,
+        textContent: {
+          greeting: item.textContent.greeting,
+          message: item.textContent.message ?? "",
+          closing: item.textContent.closing,
+          signature: item.textContent.signature
+            ? {
+                text: item.textContent.signature.text,
+                name: item.textContent.signature.name ?? "",
+              }
+            : undefined,
+        },
+        type: item.type,
+        aspect: item.aspect,
+        url: item.url,
+      }));
+      setItems(mapped);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [getHeroCarouselItems]);
+
+  const total = items.length;
+  const activeItem = items[activeIndex] ?? items[0];
+
+  useEffect(() => {
+    if (activeIndex >= total) {
+      setActiveIndex(0);
+    }
+  }, [activeIndex, total]);
 
   const goToIndex = (index: number) => {
     setActiveIndex((index + total) % total);
@@ -235,6 +282,10 @@ export const HeroCarousel = () => {
   const goPrev = () => {
     goToIndex(activeIndex - 1);
   };
+
+  if (!activeItem) {
+    return null;
+  }
 
   return (
     <CarouselRoot
@@ -288,7 +339,7 @@ export const HeroCarousel = () => {
               Slide {activeIndex + 1} of {total}
             </SlideIndicator>
             <DotsRow>
-              {HERO_CAROUSEL.map((item, index) => (
+              {items.map((item, index) => (
                 <Dot
                   key={item.title}
                   type="button"

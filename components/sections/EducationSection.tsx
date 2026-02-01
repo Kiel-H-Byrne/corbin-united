@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import {
   ContentSection,
@@ -10,9 +10,10 @@ import {
 } from "@/components/ui/Section";
 import { ComingSoon } from "@/components/ui/ComingSoon";
 import { ScholarshipAppForm } from "@/components/forms/ScholarshipForm";
-import { PROFESSIONALS } from "@/data/leadership";
-import { EDUCATION_RESOURCES } from "@/data/resources";
-import { ScholarshipForm } from "@/types";
+import { ScholarshipForm, type Resource } from "@/types";
+import { useCms } from "@/components/cms/useCms";
+import { FileIcon } from "@/components/icons";
+import { type Professional as CmsProfessional } from "@/components/cms/types";
 
 const LeaderImg = styled.img.attrs({ "data-component": "LeaderImg" } as any)`
   width: 72px;
@@ -34,32 +35,88 @@ const initialScholarshipForm: ScholarshipForm = {
 };
 
 export function EducationSection() {
-  const professional = PROFESSIONALS.education;
+  const { getPdfDocuments, getProfessionals, getSections } = useCms();
+  const [title, setTitle] = useState("Scholarship Information");
+  const [professional, setProfessional] = useState({
+    name: "",
+    email: "",
+    img: "",
+    title: "",
+  });
+  const [resources, setResources] = useState<Resource[]>([]);
   const [schForm, setSchForm] = useState(initialScholarshipForm);
   const [schSuccess, setSchSuccess] = useState(false);
   const schSuccessRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    let active = true;
+
+    getSections().then((sections) => {
+      if (!active) return;
+      const match = (sections ?? []).find((sec) => sec.key === "education");
+      if (match?.label) {
+        setTitle(match.label);
+      }
+    });
+
+    getProfessionals().then((professionals) => {
+      if (!active) return;
+      const match = (professionals ?? []).find(
+        (prof: CmsProfessional) => prof.area === "education"
+      );
+      if (match) {
+        setProfessional({
+          name: match.name,
+          email: match.email ?? "",
+          img: match.img ?? "",
+          title: match.title ?? "",
+        });
+      }
+    });
+
+    getPdfDocuments("education").then((documents) => {
+      if (!active) return;
+      const cmsResources = (documents ?? [])
+        .filter((doc) => !!doc.url)
+        .map((doc) => ({
+          title: doc.title,
+          url: doc.url as string,
+          icon: <FileIcon />,
+        }));
+
+      setResources(cmsResources);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [getPdfDocuments, getProfessionals, getSections]);
+
   return (
-    <ComingSoon
-      title="Scholarship"
-      message="Scholarship details for this year are being finalized."
-    >
       <ContentSection data-component="EducationSection">
-        <SectionTitle>Scholarship Information</SectionTitle>
-        <SectionText>
-          Meet our education specialist:
-          <br />
-          <b>{professional.name}</b> – {professional.email}
-          <br />
-          <ExpertTitle>{professional.title}</ExpertTitle>
-        </SectionText>
-        <LeaderImg src={professional.img} alt={professional.name} />
-        <SectionText>Download education resources:</SectionText>
-        {EDUCATION_RESOURCES.map((r) => (
-          <ResourceTile key={r.title} href={r.url} aria-label={r.title}>
-            <span aria-hidden="true">{r.icon}</span> {r.title}
-          </ResourceTile>
-        ))}
+        <SectionTitle>{title}</SectionTitle>
+        {!!professional.name && (
+          <>
+            <SectionText>
+              Meet our education specialist:
+              <br />
+              <b>{professional.name}</b> – {professional.email}
+              <br />
+              <ExpertTitle>{professional.title}</ExpertTitle>
+            </SectionText>
+            <LeaderImg src={professional.img} alt={professional.name} />
+          </>
+        )}
+        {resources.length > 0 && (
+          <>
+            <SectionText>Download education resources:</SectionText>
+            {resources.map((r) => (
+              <ResourceTile key={r.title} href={r.url} aria-label={r.title}>
+                <span aria-hidden="true">{r.icon}</span> {r.title}
+              </ResourceTile>
+            ))}
+          </>
+        )}
         <SectionText>
           Apply for scholarships and access learning resources.
         </SectionText>
@@ -76,7 +133,5 @@ export function EducationSection() {
           successRef={schSuccessRef}
         />
       </ContentSection>
-    </ComingSoon>
   );
 }
-
