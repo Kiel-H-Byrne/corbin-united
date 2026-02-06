@@ -85,7 +85,7 @@ export const HERO_CAROUSEL: HeroCarouselItem[] = [
     },
     type: "video",
     aspect: "9:16",
-    url: "/video/LorettaEarly.3gp",
+    url: "/video/LorettaEarly.mp4",
   },
   {
     title: "Basket of Cheer Raffle 2025",

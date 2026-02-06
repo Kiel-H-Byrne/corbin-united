@@ -1,19 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import {
-  ContentSection,
-  SectionTitle,
-  SectionText,
-  ResourceTile,
-} from "@/components/ui/Section";
-import { ComingSoon } from "@/components/ui/ComingSoon";
-import { ScholarshipAppForm } from "@/components/forms/ScholarshipForm";
-import { ScholarshipForm, type Resource } from "@/types";
 import { useCms } from "@/components/cms/useCms";
 import { FileIcon } from "@/components/icons";
-import { type Professional as CmsProfessional } from "@/components/cms/types";
+import {
+  ContentSection,
+  ResourceTile,
+  SectionText,
+  SectionTitle,
+} from "@/components/ui/Section";
+import { ScholarshipForm, type Resource } from "@/types";
+import { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 
 const LeaderImg = styled.img.attrs({ "data-component": "LeaderImg" } as any)`
   width: 72px;
@@ -59,20 +56,20 @@ export function EducationSection() {
       }
     });
 
-    getProfessionals().then((professionals) => {
-      if (!active) return;
-      const match = (professionals ?? []).find(
-        (prof: CmsProfessional) => prof.area === "education"
-      );
-      if (match) {
-        setProfessional({
-          name: match.name,
-          email: match.email ?? "",
-          img: match.img ?? "",
-          title: match.title ?? "",
-        });
-      }
-    });
+    // getProfessionals().then((professionals) => {
+    //   if (!active) return;
+    //   const match = (professionals ?? []).find(
+    //     (prof: CmsProfessional) => prof.area === "education",
+    //   );
+    //   if (match) {
+    //     setProfessional({
+    //       name: match.name,
+    //       email: match.email ?? "",
+    //       img: match.img ?? "",
+    //       title: match.title ?? "",
+    //     });
+    //   }
+    // });
 
     getPdfDocuments("education").then((documents) => {
       if (!active) return;
@@ -93,45 +90,45 @@ export function EducationSection() {
   }, [getPdfDocuments, getProfessionals, getSections]);
 
   return (
-      <ContentSection data-component="EducationSection">
-        <SectionTitle>{title}</SectionTitle>
-        {!!professional.name && (
-          <>
-            <SectionText>
-              Meet our education specialist:
-              <br />
-              <b>{professional.name}</b> – {professional.email}
-              <br />
-              <ExpertTitle>{professional.title}</ExpertTitle>
-            </SectionText>
-            <LeaderImg src={professional.img} alt={professional.name} />
-          </>
-        )}
-        {resources.length > 0 && (
-          <>
-            <SectionText>Download education resources:</SectionText>
-            {resources.map((r) => (
-              <ResourceTile key={r.title} href={r.url} aria-label={r.title}>
-                <span aria-hidden="true">{r.icon}</span> {r.title}
-              </ResourceTile>
-            ))}
-          </>
-        )}
-        <SectionText>
-          Apply for scholarships and access learning resources.
-        </SectionText>
-        <ScholarshipAppForm
-          form={schForm}
-          setForm={setSchForm}
-          onSuccess={() => {
-            setSchSuccess(true);
-            setTimeout(() => setSchSuccess(false), 4000);
-            setSchForm(initialScholarshipForm);
-            schSuccessRef.current?.focus();
-          }}
-          success={schSuccess}
-          successRef={schSuccessRef}
-        />
-      </ContentSection>
+    <ContentSection data-component="EducationSection">
+      <SectionTitle>{title}</SectionTitle>
+      {!!professional.name && (
+        <>
+          <SectionText>
+            Meet our education specialist:
+            <br />
+            <b>{professional.name}</b> – {professional.email}
+            <br />
+            <ExpertTitle>{professional.title}</ExpertTitle>
+          </SectionText>
+          <LeaderImg src={professional.img} alt={professional.name} />
+        </>
+      )}
+      {resources.length > 0 && (
+        <>
+          <SectionText>Download education resources:</SectionText>
+          {resources.map((r) => (
+            <ResourceTile key={r.title} href={r.url} aria-label={r.title}>
+              <span aria-hidden="true">{r.icon}</span> {r.title}
+            </ResourceTile>
+          ))}
+        </>
+      )}
+      {/* <SectionText>
+        Apply for scholarships and access learning resources.
+      </SectionText>
+      <ScholarshipAppForm
+        form={schForm}
+        setForm={setSchForm}
+        onSuccess={() => {
+          setSchSuccess(true);
+          setTimeout(() => setSchSuccess(false), 4000);
+          setSchForm(initialScholarshipForm);
+          schSuccessRef.current?.focus();
+        }}
+        success={schSuccess}
+        successRef={schSuccessRef}
+      /> */}
+    </ContentSection>
   );
 }

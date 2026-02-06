@@ -39,7 +39,7 @@ export const PROFESSIONALS: Record<string, Professional> = {
     title: "Community Health Expert",
   },
   education: {
-    name: "Prof. Katherine Johnson",
+    name: "Prof. Kat Johnson",
     email: "katherine@corbinunited.org",
     img: "https://randomuser.me/api/portraits/women/49.jpg",
     title: "Education Specialist",
