@@ -1,56 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCms } from "@/components/cms/useCms";
 import { PhotoGrid } from "@/components/PhotoGrid";
 import {
   ContentSection,
+  PageTitle,
   SectionTitle,
-  SectionText,
 } from "@/components/ui/Section";
-import { useCms } from "@/components/cms/useCms";
-import { type FloatingImage } from "@/types";
+import { useEffect, useState } from "react";
+import { Album } from "../cms/types";
 
-export function FamilyAlbumSection() {
-  const { getAlbums, getSections } = useCms();
-  const [title, setTitle] = useState("Family Photo Album");
-  const [images, setImages] = useState<FloatingImage[]>([]);
+export function AlbumSection() {
+  const { getAlbums } = useCms();
+  const [albums, setAlbums] = useState<Album[]>([]);
 
   useEffect(() => {
-    let active = true;
-
-    getSections().then((sections) => {
-      if (!active) return;
-      const match = (sections ?? []).find((sec) => sec.key === "family-album");
-      if (match?.label) {
-        setTitle(match.label);
-      }
-    });
-
-    getAlbums("family-album").then((albums) => {
-      if (!active) return;
-      const cmsImages = (albums ?? []).flatMap((album) =>
-        (album.images ?? []).map((url) => ({
-          url,
-          title: album.title ?? "",
-        }))
-      );
-      setImages(cmsImages);
-    });
-
-    return () => {
-      active = false;
-    };
-  }, [getAlbums, getSections]);
-
+    getAlbums().then((albums) => albums && setAlbums(albums));
+  }, [getAlbums]);
+  console.log(albums);
   return (
-    <ContentSection data-component="FamilyAlbumSection">
-      <SectionTitle>{title}</SectionTitle>
-      {images.length > 0 && (
-        <>
-          <SectionText>Memories:</SectionText>
-          <PhotoGrid images={images} />
-        </>
-      )}
+    <ContentSection data-component="AlbumSection">
+      <PageTitle>Photo Gallery</PageTitle>
+      {albums.length > 0 &&
+        albums.map((album) => (
+          <div key={album.id}>
+            <SectionTitle>{album.title}</SectionTitle>
+            <PhotoGrid images={album.images} title={album.title} />
+          </div>
+        ))}
     </ContentSection>
   );
 }

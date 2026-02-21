@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FloatingImage } from "@/types";
 
 const GridContainer = styled.div`
   display: grid;
@@ -88,20 +88,21 @@ const LightboxImage = styled.img`
 `;
 
 type Props = {
-  images: FloatingImage[];
+  images: string[];
+  title: string;
 };
 
-export const PhotoGrid: React.FC<Props> = ({ images }) => {
+export const PhotoGrid: React.FC<Props> = ({ images, title }) => {
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
   return (
     <>
       <GridContainer>
-        {images.map((img, i) => (
-          <PhotoCard key={i} onClick={() => setLightboxImage(img.url)}>
-            <img src={img.url} alt={img.title} />
+        {images.map((url, i) => (
+          <PhotoCard key={i} onClick={() => setLightboxImage(url)}>
+            <Image src={url} alt={title} width={120} height={120} />
             <Caption>
-              <span>{img.title}</span>
+              <span>{title}</span>
             </Caption>
           </PhotoCard>
         ))}
@@ -114,4 +115,3 @@ export const PhotoGrid: React.FC<Props> = ({ images }) => {
     </>
   );
 };
-

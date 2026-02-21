@@ -21,10 +21,11 @@ export default {
       name: "images",
       title: "Images",
       type: "array",
+      options: { layout: 'grid' },
       of: [
         {
           type: "image",
-          options: { hotspot: true },
+          options: { hotspot: true, accept: 'image/*' },
         },
       ],
       validation: (Rule:any) =>
