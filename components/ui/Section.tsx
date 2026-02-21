@@ -19,6 +19,30 @@ export const ContentSection = styled.section.attrs({
   }
 `;
 
+export const PageTitle = styled.h1.attrs({
+  "data-component": "SectionTitle",
+} as any)`
+  font-size: ${(p) => p.theme.typography.h1Size}px;
+  color: ${(p) => p.theme.colors.accent};
+  font-family: ${(p) => p.theme.typography.headingFont};
+  font-weight: ${(p) => p.theme.typography.headingFontWeight};
+  text-align: center;
+  margin: 0 0 ${(p) => p.theme.spacing.lg}px 0;
+  position: relative;
+  padding-bottom: ${(p) => p.theme.spacing.md}px;
+
+  &::after {
+    content: "";
+    justify-self: center;
+    display: flex;
+    bottom: 0;
+    width: 60px;
+    height: 3px;
+    background: ${(p) => p.theme.colors.accent};
+    border-radius: 2px;
+  }
+`;
+
 export const SectionTitle = styled.h2.attrs({
   "data-component": "SectionTitle",
 } as any)`
