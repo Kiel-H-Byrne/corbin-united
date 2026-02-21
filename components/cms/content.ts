@@ -2,21 +2,19 @@
 import { sanityClient } from "./client";
 import {
   type Album,
-  type PdfDocument,
-  type SectionItem,
-  type Leader,
-  type Professional,
-  type Event,
-  type PastEvent,
-  type HeroCarouselItem,
-  type FooterText,
-  type FooterContact,
   type CtaSection,
+  type Event,
+  type FooterContact,
+  type FooterText,
+  type HeroCarouselItem,
+  type Leader,
+  type PastEvent,
+  type PdfDocument,
+  type Professional,
+  type SectionItem,
 } from "./types";
 
-export async function fetchPdfDocuments(
-  page: string
-): Promise<PdfDocument[]> {
+export async function fetchPdfDocuments(page: string): Promise<PdfDocument[]> {
   return sanityClient.fetch(
     `
     *[_type == "pdfDocument" && $page in displayPages]{
@@ -25,16 +23,14 @@ export async function fetchPdfDocuments(
       "url": select(defined(pdf.asset->url) => pdf.asset->url, defined(url) => url)
     }
     `,
-    { page }
+    { page },
   );
 }
 
-export async function fetchAlbums(
-  page: string
-): Promise<Album[]> {
+export async function fetchAlbums(): Promise<Album[]> {
   return sanityClient.fetch(
     `
-    *[_type == "album" && $page in displayPages]{
+    *[_type == "album"]{
       "id": _id,
       title,
       description,
@@ -45,13 +41,10 @@ export async function fetchAlbums(
       )
     }
     `,
-    { page }
   );
 }
 
-export async function fetchAlbumById(
-  id: string
-): Promise<Album | null> {
+export async function fetchAlbumById(id: string): Promise<Album | null> {
   return sanityClient.fetch(
     `
     *[_type == "album" && _id == $id][0]{
@@ -65,7 +58,7 @@ export async function fetchAlbumById(
       )
     }
     `,
-    { id }
+    { id },
   );
 }
 
@@ -79,7 +72,7 @@ export async function fetchSections(): Promise<SectionItem[]> {
       iconName,
       desc
     }
-    `
+    `,
   );
 }
 
@@ -94,7 +87,7 @@ export async function fetchLeaders(): Promise<Leader[]> {
       phone,
       email
     }
-    `
+    `,
   );
 }
 
@@ -109,7 +102,7 @@ export async function fetchProfessionals(): Promise<Professional[]> {
       img,
       title
     }
-    `
+    `,
   );
 }
 
@@ -133,7 +126,7 @@ export async function fetchEvents(): Promise<Event[]> {
       },
       closingWords
     }
-    `
+    `,
   );
 }
 
@@ -145,7 +138,7 @@ export async function fetchPastEvents(): Promise<PastEvent[]> {
       title,
       img
     }
-    `
+    `,
   );
 }
 
@@ -163,7 +156,7 @@ export async function fetchHeroCarouselItems(): Promise<HeroCarouselItem[]> {
         defined(url) => url
       )
     }
-    `
+    `,
   );
 }
 
@@ -177,7 +170,7 @@ export async function fetchFooterText(): Promise<FooterText | null> {
       missionText,
       copyrightText
     }
-    `
+    `,
   );
 }
 
@@ -189,13 +182,11 @@ export async function fetchFooterContact(): Promise<FooterContact | null> {
       email,
       phone
     }
-    `
+    `,
   );
 }
 
-export async function fetchCtaSection(
-  key: string
-): Promise<CtaSection | null> {
+export async function fetchCtaSection(key: string): Promise<CtaSection | null> {
   return sanityClient.fetch(
     `
     *[_type == "ctaSection" && key == $key && active == true][0]{
@@ -209,6 +200,6 @@ export async function fetchCtaSection(
       active
     }
     `,
-    { key }
+    { key },
   );
 }
