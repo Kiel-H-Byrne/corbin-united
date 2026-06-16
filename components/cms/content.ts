@@ -116,8 +116,18 @@ export async function fetchEvents(): Promise<Event[]> {
       location,
       time,
       desc,
-      img,
-      thumbnailUrl,
+      "img": select(
+        defined(imageFile.asset->url) => imageFile.asset->url,
+        defined(img) => img,
+        ""
+      ),
+      "thumbnailUrl": select(
+        defined(thumbnailFile.asset->url) => thumbnailFile.asset->url,
+        defined(thumbnailUrl) => thumbnailUrl,
+        defined(imageFile.asset->url) => imageFile.asset->url,
+        defined(img) => img,
+        ""
+      ),
       descLists[]{title, items},
       payment{
         amount,
@@ -136,7 +146,11 @@ export async function fetchPastEvents(): Promise<PastEvent[]> {
     *[_type == "pastEvent"]{
       "id": _id,
       title,
-      img
+      "img": select(
+        defined(imageFile.asset->url) => imageFile.asset->url,
+        defined(img) => img,
+        ""
+      )
     }
     `,
   );
