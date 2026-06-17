@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useCms } from "@/components/cms/useCms";
-import { type HeroCarouselItem as CmsHeroCarouselItem } from "@/components/cms/types";
 import { HeroCarouselItem } from "@/types";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const CarouselRoot = styled.div`
@@ -237,7 +236,8 @@ export const HeroCarousel = () => {
     getHeroCarouselItems().then((cmsItems) => {
       if (!active) return;
       if (!cmsItems || cmsItems.length === 0) return;
-      const mapped = cmsItems.map((item: CmsHeroCarouselItem) => ({
+      const mapped = cmsItems.map((item: HeroCarouselItem) => ({
+        id: item.id,
         title: item.title,
         textContent: {
           greeting: item.textContent.greeting,
@@ -245,9 +245,9 @@ export const HeroCarousel = () => {
           closing: item.textContent.closing,
           signature: item.textContent.signature
             ? {
-                text: item.textContent.signature.text,
-                name: item.textContent.signature.name ?? "",
-              }
+              text: item.textContent.signature.text,
+              name: item.textContent.signature.name ?? "",
+            }
             : undefined,
         },
         type: item.type,

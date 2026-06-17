@@ -17,16 +17,16 @@ import {
 import {
   type Album,
   type CtaSection,
-  type Event,
+  type CmsEvent,
   type FooterContact,
   type FooterText,
   type HeroCarouselItem,
   type Leader,
-  type PastEvent,
+  type CmsPastEvent,
   type PdfDocument,
   type Professional,
-  type SectionItem,
-} from "./types";
+  type CmsSection,
+} from "@/types";
 
 export function useCms() {
   const [loading, setLoading] = useState(false);
@@ -61,7 +61,7 @@ export function useCms() {
   );
 
   const getSections = useCallback(
-    () => run<SectionItem[]>(() => fetchSections()),
+    () => run<CmsSection[]>(() => fetchSections()),
     [run],
   );
 
@@ -75,10 +75,10 @@ export function useCms() {
     [run],
   );
 
-  const getEvents = useCallback(() => run<Event[]>(() => fetchEvents()), [run]);
+  const getEvents = useCallback(() => run<CmsEvent[]>(() => fetchEvents()), [run]);
 
   const getPastEvents = useCallback(
-    () => run<PastEvent[]>(() => fetchPastEvents()),
+    () => run<CmsPastEvent[]>(() => fetchPastEvents()),
     [run],
   );
 

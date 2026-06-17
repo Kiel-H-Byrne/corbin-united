@@ -1,5 +1,6 @@
 "use client";
 
+import { useCms } from "@/components/cms/useCms";
 import { AvatarIcon, MailIcon, PhoneIcon } from "@/components/icons";
 import { ComingSoon } from "@/components/ui/ComingSoon";
 import {
@@ -7,8 +8,7 @@ import {
   SectionText,
   SectionTitle,
 } from "@/components/ui/Section";
-import { useCms } from "@/components/cms/useCms";
-import { type Leader as CmsLeader } from "@/components/cms/types";
+import { Leader } from "@/types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -97,7 +97,7 @@ export function AboutSection() {
     getLeaders().then((cmsLeaders) => {
       if (!active) return;
       if (!cmsLeaders || cmsLeaders.length === 0) return;
-      const mapped = cmsLeaders.map((ldr: CmsLeader) => ({
+      const mapped = cmsLeaders.map((ldr: Leader) => ({
         name: ldr.name,
         role: ldr.role,
         img: ldr.img ?? "",

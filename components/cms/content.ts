@@ -3,16 +3,16 @@ import { sanityClient } from "./client";
 import {
   type Album,
   type CtaSection,
-  type Event,
+  type CmsEvent,
   type FooterContact,
   type FooterText,
   type HeroCarouselItem,
   type Leader,
-  type PastEvent,
+  type CmsPastEvent,
   type PdfDocument,
   type Professional,
-  type SectionItem,
-} from "./types";
+  type CmsSection,
+} from "@/types";
 
 export async function fetchPdfDocuments(page: string): Promise<PdfDocument[]> {
   return sanityClient.fetch(
@@ -62,7 +62,7 @@ export async function fetchAlbumById(id: string): Promise<Album | null> {
   );
 }
 
-export async function fetchSections(): Promise<SectionItem[]> {
+export async function fetchSections(): Promise<CmsSection[]> {
   return sanityClient.fetch(
     `
     *[_type == "section"]{
@@ -106,7 +106,7 @@ export async function fetchProfessionals(): Promise<Professional[]> {
   );
 }
 
-export async function fetchEvents(): Promise<Event[]> {
+export async function fetchEvents(): Promise<CmsEvent[]> {
   return sanityClient.fetch(
     `
     *[_type == "event" && isActive == true && (!defined(date) || dateTime(date) >= dateTime(now()))] | order(date asc){
@@ -140,7 +140,7 @@ export async function fetchEvents(): Promise<Event[]> {
   );
 }
 
-export async function fetchPastEvents(): Promise<PastEvent[]> {
+export async function fetchPastEvents(): Promise<CmsPastEvent[]> {
   return sanityClient.fetch(
     `
     *[_type == "pastEvent" || (_type == "event" && isActive == true && defined(date) && dateTime(date) < dateTime(now()))] | order(date desc){

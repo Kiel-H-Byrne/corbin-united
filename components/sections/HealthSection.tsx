@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import styled from "styled-components";
-import {
-  ContentSection,
-  SectionTitle,
-  SectionText,
-  ResourceTile,
-} from "@/components/ui/Section";
 import { useCms } from "@/components/cms/useCms";
 import { FileIcon } from "@/components/icons";
-import { type Resource } from "@/types";
-import { type Professional as CmsProfessional } from "@/components/cms/types";
+import {
+  ContentSection,
+  ResourceTile,
+  SectionText,
+  SectionTitle,
+} from "@/components/ui/Section";
+import { Professional, type Resource } from "@/types";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 
 const LeaderImg = styled.img.attrs({ "data-component": "LeaderImg" } as any)`
   width: 72px;
@@ -51,7 +50,7 @@ export function HealthSection() {
     getProfessionals().then((professionals) => {
       if (!active) return;
       const match = (professionals ?? []).find(
-        (prof: CmsProfessional) => prof.area === "health"
+        (prof: Professional) => prof.area === "health"
       );
       if (match) {
         setProfessional({

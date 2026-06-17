@@ -7,8 +7,8 @@ import {
   PageTitle,
   SectionTitle,
 } from "@/components/ui/Section";
+import { Album } from "@/types";
 import { useEffect, useState } from "react";
-import { Album } from "../cms/types";
 
 export function AlbumSection() {
   const { getAlbums } = useCms();

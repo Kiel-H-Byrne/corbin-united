@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import styled, { css } from "styled-components";
 import { SectionText } from "@/components/ui/Section";
 import { Payment } from "@/types";
+import { useState } from "react";
+import styled, { css } from "styled-components";
 
 const PaymentSection = styled.div`
   background: transparent;
@@ -89,7 +89,7 @@ export function PaymentOptions({
   payment,
   view = "default",
 }: PaymentOptionsProps) {
-  const [copied, setCopied] = useState<string | false>(false);
+  const [copied, setCopied] = useState<string | false | undefined>(false);
 
   return (
     <PaymentSection>
@@ -98,7 +98,7 @@ export function PaymentOptions({
       )}
 
       <SectionText>
-        <b>${payment.amount.amount}</b> per {payment.amount.per}
+        <b>${payment.amount?.amount}</b> per {payment.amount?.per}
       </SectionText>
       <PaymentButtonContainer view={view}>
         {payment.options.map((opt) => (
@@ -109,7 +109,7 @@ export function PaymentOptions({
               if (opt.url) {
                 window.open(opt.url, "_blank");
               } else {
-                navigator.clipboard.writeText(opt.username);
+                navigator.clipboard.writeText(opt.username ?? "");
                 setCopied(opt.username);
                 setTimeout(() => setCopied(false), 2000);
               }

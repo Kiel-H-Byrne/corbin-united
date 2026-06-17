@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import { useCms } from "@/components/cms/useCms";
 import { BillAssistanceForm } from "@/components/forms/BillAssistanceForm";
+import { FileIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import {
   ContentSection,
@@ -10,11 +10,10 @@ import {
   SectionText,
   SectionTitle,
 } from "@/components/ui/Section";
-import { BillForm, Resource } from "@/types";
+import { BillForm, Professional, Resource } from "@/types";
+import { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 import { ComingSoon } from "../ui/ComingSoon";
-import { useCms } from "@/components/cms/useCms";
-import { FileIcon } from "@/components/icons";
-import { type Professional as CmsProfessional } from "@/components/cms/types";
 
 const LeaderImg = styled.img.attrs({ "data-component": "LeaderImg" } as any)`
   width: 72px;
@@ -59,7 +58,7 @@ export function FinancesSection() {
     getProfessionals().then((professionals) => {
       if (!active) return;
       const match = (professionals ?? []).find(
-        (prof: CmsProfessional) => prof.area === "finances"
+        (prof: Professional) => prof.area === "finances"
       );
       if (match) {
         setProfessional({

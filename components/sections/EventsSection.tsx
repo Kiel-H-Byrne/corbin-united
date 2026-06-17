@@ -1,20 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import styled from "styled-components";
-import { tokens } from "@/lib/theme";
-import { ContentSection, SectionTitle, SectionText } from "@/components/ui/Section";
+import { CmsEvent, CmsPastEvent, Event } from "@/types";
+import { useCms } from "@/components/cms/useCms";
 import {
   CalendarIcon,
+  CashAppIcon,
   ClockIcon,
   LocationIcon,
-  CashAppIcon,
   ZelleIcon,
 } from "@/components/icons";
 import { PaymentOptions } from "@/components/PaymentOptions";
-import { useCms } from "@/components/cms/useCms";
-import { type Event as CmsEvent, type PastEvent as CmsPastEvent } from "@/components/cms/types";
-import { type Event, type PastEvent } from "@/types";
+import { ContentSection, SectionText, SectionTitle } from "@/components/ui/Section";
+import { tokens } from "@/lib/theme";
+import { useEffect, useMemo, useState } from "react";
+import styled from "styled-components";
 
 const EventCarousel = styled.div.attrs({
   "data-component": "EventCarousel",
@@ -137,7 +136,7 @@ export function EventsSection() {
   const { getEvents, getPastEvents, getSections } = useCms();
   const [title, setTitle] = useState("Upcoming Events");
   const [events, setEvents] = useState<Event[]>([]);
-  const [pastEvents, setPastEvents] = useState<PastEvent[]>([]);
+  const [pastEvents, setPastEvents] = useState<Event[]>([]);
 
   const iconMap = useMemo(
     () => ({
@@ -158,7 +157,7 @@ export function EventsSection() {
       }
     });
 
-    const mapEvent = (ev: CmsEvent | CmsPastEvent) => ({
+    const mapEvent = (ev: CmsEvent | CmsPastEvent): Event => ({
       id: ev.id,
       title: ev.title,
       date: ev.date ?? "",
@@ -173,21 +172,21 @@ export function EventsSection() {
       })),
       payment: ev.payment
         ? {
-            amount: {
-              amount: ev.payment.amount?.amount ?? "",
-              per: ev.payment.amount?.per ?? "",
-            },
-            options: (ev.payment.options ?? []).map((opt) => ({
-              service: opt.service ?? "",
-              username: opt.username ?? "",
-              url: opt.url,
-              icon: opt.iconName
-                ? iconMap[opt.iconName as keyof typeof iconMap]
-                : null,
-            })),
-            note: ev.payment.note ?? "",
-            closingWords: ev.closingWords ?? "",
-          }
+          amount: {
+            amount: ev.payment.amount?.amount ?? "",
+            per: ev.payment.amount?.per ?? "",
+          },
+          options: (ev.payment.options ?? []).map((opt) => ({
+            service: opt.service ?? "",
+            username: opt.username ?? "",
+            url: opt.url,
+            icon: opt.iconName
+              ? iconMap[opt.iconName as keyof typeof iconMap]
+              : null,
+          })),
+          note: ev.payment.note ?? "",
+          closingWords: ev.closingWords ?? "",
+        }
         : undefined,
       closingWords: ev.closingWords,
     });
@@ -229,10 +228,10 @@ export function EventsSection() {
                 <CalendarIcon />{" "}
                 {nextEvent.date
                   ? new Date(nextEvent.date).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
                   : "TBD"}
               </DetailItem>
               <DetailItem>
@@ -253,7 +252,7 @@ export function EventsSection() {
           <SectionText>Upcoming Events:</SectionText>
           <EventCarousel>
             {events.map((ev) => (
-              <EventCard key={ev.id || ev.title}>
+              <EventCard key={ev.title}>
                 <img
                   src={ev.img}
                   alt={ev.title}
@@ -267,10 +266,10 @@ export function EventsSection() {
                     <CalendarIcon />{" "}
                     {ev.date
                       ? new Date(ev.date).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })
                       : "TBD"}
                   </DetailItem>
                   <DetailItem>
@@ -303,7 +302,7 @@ export function EventsSection() {
           <SectionText>Past Events:</SectionText>
           <EventCarousel>
             {pastEvents.map((ev) => (
-              <EventCard key={ev.id || ev.title}>
+              <EventCard key={ev.title}>
                 <img
                   src={ev.img}
                   alt={ev.title}

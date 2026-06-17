@@ -3,6 +3,7 @@ import { Event, HeroCarouselItem, PastEvent } from "@/types";
 
 export const UPCOMING_EVENTS: Event[] = [
   {
+    id: "250720251",
     title: "New Year's Cabaret",
     date: "2025-12-31T19:00:00",
     location: "123 Main St, Anytown, USA",
@@ -50,6 +51,7 @@ export const UPCOMING_EVENTS: Event[] = [
       "This is more than a party — it's a New Year's experience. Dress to impress, bring your friends, and step into 2025 surrounded by great people, great energy, and unforgettable moments.",
   },
   {
+    id: "240920241",
     title: "Scholarship Awards Night",
     date: "2024-09-10T18:00:00",
     location: "456 Oak Ave, Anytown, USA",
@@ -63,6 +65,7 @@ export const UPCOMING_EVENTS: Event[] = [
 
 export const PAST_EVENTS: PastEvent[] = [
   {
+    id: "2512311",
     title: "Basket of Cheer Raffle 2025",
     img: "/events/BOCRaffle_2025.JPEG",
   },
@@ -74,6 +77,7 @@ export const PAST_EVENTS: PastEvent[] = [
 
 export const HERO_CAROUSEL: HeroCarouselItem[] = [
   {
+    id: "250720251",
     title: "Message from our Matriarch Loretta Early",
     textContent: {
       greeting: "Dear Family",
@@ -88,6 +92,7 @@ export const HERO_CAROUSEL: HeroCarouselItem[] = [
     url: "/video/LorettaEarly.mp4",
   },
   {
+    id: "2512311",
     title: "Basket of Cheer Raffle 2025",
     textContent: {
       message:
@@ -99,6 +104,7 @@ export const HERO_CAROUSEL: HeroCarouselItem[] = [
     url: "/events/BOCRaffle_2025.JPEG",
   },
   {
+    id: "250720251",
     title: "New Years Cabaret",
     textContent: {
       message:
