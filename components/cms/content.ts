@@ -109,7 +109,7 @@ export async function fetchProfessionals(): Promise<Professional[]> {
 export async function fetchEvents(): Promise<Event[]> {
   return sanityClient.fetch(
     `
-    *[_type == "event" && isActive == true] | order(date desc){
+    *[_type == "event" && isActive == true && (!defined(date) || dateTime(date) >= dateTime(now()))] | order(date asc){
       "id": _id,
       title,
       date,
@@ -143,14 +143,32 @@ export async function fetchEvents(): Promise<Event[]> {
 export async function fetchPastEvents(): Promise<PastEvent[]> {
   return sanityClient.fetch(
     `
-    *[_type == "pastEvent"]{
+    *[_type == "pastEvent" || (_type == "event" && isActive == true && defined(date) && dateTime(date) < dateTime(now()))] | order(date desc){
       "id": _id,
       title,
+      date,
+      location,
+      time,
+      desc,
       "img": select(
         defined(imageFile.asset->url) => imageFile.asset->url,
         defined(img) => img,
         ""
-      )
+      ),
+      "thumbnailUrl": select(
+        defined(thumbnailFile.asset->url) => thumbnailFile.asset->url,
+        defined(thumbnailUrl) => thumbnailUrl,
+        defined(imageFile.asset->url) => imageFile.asset->url,
+        defined(img) => img,
+        ""
+      ),
+      descLists[]{title, items},
+      payment{
+        amount,
+        options,
+        note
+      },
+      closingWords
     }
     `,
   );

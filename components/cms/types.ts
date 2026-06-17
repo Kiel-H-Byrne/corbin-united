@@ -75,11 +75,7 @@ export type Event = {
   closingWords?: string;
 };
 
-export type PastEvent = {
-  id: string;
-  title: string;
-  img?: string;
-};
+export type PastEvent = Event;
 
 export type HeroSignature = {
   text?: string;

@@ -158,51 +158,51 @@ export function EventsSection() {
       }
     });
 
+    const mapEvent = (ev: CmsEvent | CmsPastEvent) => ({
+      id: ev.id,
+      title: ev.title,
+      date: ev.date ?? "",
+      location: ev.location ?? "",
+      time: ev.time ?? "",
+      desc: ev.desc ?? "",
+      img: ev.img ?? "",
+      thumbnailUrl: ev.thumbnailUrl ?? ev.img ?? "",
+      descLists: ev.descLists?.map((list) => ({
+        title: list.title ?? "",
+        items: list.items ?? [],
+      })),
+      payment: ev.payment
+        ? {
+            amount: {
+              amount: ev.payment.amount?.amount ?? "",
+              per: ev.payment.amount?.per ?? "",
+            },
+            options: (ev.payment.options ?? []).map((opt) => ({
+              service: opt.service ?? "",
+              username: opt.username ?? "",
+              url: opt.url,
+              icon: opt.iconName
+                ? iconMap[opt.iconName as keyof typeof iconMap]
+                : null,
+            })),
+            note: ev.payment.note ?? "",
+            closingWords: ev.closingWords ?? "",
+          }
+        : undefined,
+      closingWords: ev.closingWords,
+    });
+
     getEvents().then((cmsEvents) => {
       if (!active) return;
       if (!cmsEvents || cmsEvents.length === 0) return;
-      const mapped = cmsEvents.map((ev: CmsEvent) => ({
-        title: ev.title,
-        date: ev.date ?? "",
-        location: ev.location ?? "",
-        time: ev.time ?? "",
-        desc: ev.desc ?? "",
-        img: ev.img ?? "",
-        thumbnailUrl: ev.thumbnailUrl ?? ev.img ?? "",
-        descLists: ev.descLists?.map((list) => ({
-          title: list.title ?? "",
-          items: list.items ?? [],
-        })),
-        payment: ev.payment
-          ? {
-              amount: {
-                amount: ev.payment.amount?.amount ?? "",
-                per: ev.payment.amount?.per ?? "",
-              },
-              options: (ev.payment.options ?? []).map((opt) => ({
-                service: opt.service ?? "",
-                username: opt.username ?? "",
-                url: opt.url,
-                icon: opt.iconName
-                  ? iconMap[opt.iconName as keyof typeof iconMap]
-                  : null,
-              })),
-              note: ev.payment.note ?? "",
-              closingWords: ev.closingWords ?? "",
-            }
-          : undefined,
-        closingWords: ev.closingWords,
-      }));
+      const mapped = cmsEvents.map(mapEvent);
       setEvents(mapped);
     });
 
     getPastEvents().then((cmsPastEvents) => {
       if (!active) return;
       if (!cmsPastEvents || cmsPastEvents.length === 0) return;
-      const mapped = cmsPastEvents.map((ev: CmsPastEvent) => ({
-        title: ev.title,
-        img: ev.img ?? "",
-      }));
+      const mapped = cmsPastEvents.map(mapEvent);
       setPastEvents(mapped);
     });
 
@@ -253,7 +253,7 @@ export function EventsSection() {
           <SectionText>Upcoming Events:</SectionText>
           <EventCarousel>
             {events.map((ev) => (
-              <EventCard key={ev.title}>
+              <EventCard key={ev.id || ev.title}>
                 <img
                   src={ev.img}
                   alt={ev.title}
@@ -303,7 +303,7 @@ export function EventsSection() {
           <SectionText>Past Events:</SectionText>
           <EventCarousel>
             {pastEvents.map((ev) => (
-              <EventCard key={ev.title}>
+              <EventCard key={ev.id || ev.title}>
                 <img
                   src={ev.img}
                   alt={ev.title}
@@ -311,7 +311,42 @@ export function EventsSection() {
                   data-component="PastEventImage"
                   loading="lazy"
                 />
-                <b>{ev.title}</b>
+                <EventTitle>{ev.title}</EventTitle>
+                <EventDetails>
+                  {ev.date && (
+                    <DetailItem>
+                      <CalendarIcon />{" "}
+                      {new Date(ev.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </DetailItem>
+                  )}
+                  {ev.time && (
+                    <DetailItem>
+                      <ClockIcon /> {ev.time}
+                    </DetailItem>
+                  )}
+                  {ev.location && (
+                    <DetailItem>
+                      <LocationIcon /> {ev.location}
+                    </DetailItem>
+                  )}
+                </EventDetails>
+                {ev.desc && <span>{ev.desc}</span>}
+                {ev.descLists &&
+                  ev.descLists.map((list) => (
+                    <DescList key={list.title}>
+                      <h4>{list.title}</h4>
+                      <ul>
+                        {list.items.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </DescList>
+                  ))}
+                {ev.payment && <PaymentOptions payment={ev.payment} />}
               </EventCard>
             ))}
           </EventCarousel>
