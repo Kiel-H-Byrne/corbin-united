@@ -66,6 +66,16 @@ export default {
       },
     },
     {
+      name: "images",
+      title: "Event Images (Multiple)",
+      type: "array",
+      description: "Upload multiple images (e.g., front and back of a flyer).",
+      of: [
+        { type: "image", options: { hotspot: true, accept: "image/*" } },
+        { type: "url", name: "imageUrl", title: "Image URL", components: { input: UrlImagePreviewInput } }
+      ],
+    },
+    {
       name: "thumbnailFile",
       title: "Thumbnail Upload",
       type: "image",
