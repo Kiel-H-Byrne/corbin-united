@@ -72,7 +72,19 @@ export default {
       description: "Upload multiple images (e.g., front and back of a flyer).",
       of: [
         { type: "image", options: { hotspot: true, accept: "image/*" } },
-        { type: "url", name: "imageUrl", title: "Image URL", components: { input: UrlImagePreviewInput } }
+        { 
+          type: "object", 
+          name: "imageUrl", 
+          title: "Image URL", 
+          fields: [
+            { 
+              name: "url", 
+              type: "url", 
+              title: "URL", 
+              components: { input: UrlImagePreviewInput } 
+            }
+          ]
+        }
       ],
     },
     {
