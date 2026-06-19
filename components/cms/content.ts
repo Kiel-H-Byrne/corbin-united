@@ -128,6 +128,12 @@ export async function fetchEvents(): Promise<CmsEvent[]> {
         defined(img) => img,
         ""
       ),
+      "images": select(
+        defined(images) => images[]{
+          "url": coalesce(asset->url, url)
+        }.url,
+        []
+      ),
       descLists[]{title, items},
       payment{
         amount,
@@ -161,6 +167,12 @@ export async function fetchPastEvents(): Promise<CmsPastEvent[]> {
         defined(imageFile.asset->url) => imageFile.asset->url,
         defined(img) => img,
         ""
+      ),
+      "images": select(
+        defined(images) => images[]{
+          "url": coalesce(asset->url, url)
+        }.url,
+        []
       ),
       descLists[]{title, items},
       payment{

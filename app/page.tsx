@@ -64,6 +64,26 @@ const HeroTagline = styled.p`
   letter-spacing: 1px;
 `;
 
+const HeroButton = styled.a`
+  display: inline-block;
+  margin-top: ${(p) => p.theme.spacing.lg}px;
+  padding: ${(p) => p.theme.spacing.md}px ${(p) => p.theme.spacing.xl}px;
+  background-color: ${(p) => p.theme.colors.surface};
+  color: ${(p) => p.theme.colors.accent};
+  font-family: ${(p) => p.theme.typography.headingFont};
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  text-decoration: none;
+  box-shadow: ${(p) => p.theme.shadows.md};
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: ${(p) => p.theme.shadows.lg};
+  }
+`;
+
 const MainContent = styled.main`
   width: 100%;
   max-width: 1200px;
@@ -142,6 +162,13 @@ export default function HomePage() {
           <HeroTagline>
             Early, Maddox, Corbin, Oneal, Crippen, Conix, Fooks, Jordan
           </HeroTagline>
+          <HeroButton
+            href="https://www.parishgiving.org/payment;id=1F6C39377A7713782207FE66ED961241DE388967E747453E"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Make a Payment / Donation
+          </HeroButton>
         </HeroContent>
       </HeroSection>
       <HeroCarousel />

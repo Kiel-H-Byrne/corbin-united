@@ -3,6 +3,7 @@
 import { useCms } from "@/components/cms/useCms";
 import { HeroCarouselItem } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -99,7 +100,7 @@ const ControlsInner = styled.div`
   align-items: center;
   gap: ${(p) => p.theme.spacing.md}px;
   padding: ${(p) => p.theme.spacing.sm}px ${(p) => p.theme.spacing.lg}px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.8);
   border-radius: ${(p) => p.theme.radii.large}px;
   box-shadow: ${(p) => p.theme.shadows.sm};
 `;
@@ -111,11 +112,11 @@ const DotsRow = styled.div`
 
 const SlideIndicator = styled.span`
   font-size: ${(p) => p.theme.typography.body2}px;
-  color: ${(p) => p.theme.colors.textSecondary};
+  color: rgba(255, 255, 255, 0.9);
 `;
 
 const Dot = styled.button`
-  background-color: ${(p) => p.theme.colors.border};
+  background-color: rgba(255, 255, 255, 0.4);
   border: none;
   border-radius: 50%;
   width: 14px;
@@ -125,10 +126,10 @@ const Dot = styled.button`
   transition: background-color 0.3s;
 
   &.active {
-    background-color: ${(p) => p.theme.colors.accent};
+    background-color: #ffffff;
   }
   &:focus-visible {
-    outline: 2px solid ${(p) => p.theme.colors.accent};
+    outline: 2px solid #ffffff;
     outline-offset: 2px;
   }
 `;
@@ -140,24 +141,25 @@ const NavButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
   border: none;
-  background: ${(p) => p.theme.colors.surface};
-  color: ${(p) => p.theme.colors.accent};
+  background: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
   box-shadow: ${(p) => p.theme.shadows.sm};
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+  font-size: 1.5rem;
 
   &:hover {
-    background: ${(p) => p.theme.colors.accent};
-    color: ${(p) => p.theme.colors.surface};
-    transform: translateY(-50%) scale(1.03);
+    background: rgba(0, 0, 0, 0.95);
+    transform: translateY(-50%) scale(1.05);
   }
 
   &:focus-visible {
-    outline: 2px solid ${(p) => p.theme.colors.accent};
+    outline: 2px solid #ffffff;
     outline-offset: 2px;
   }
 `;
@@ -197,12 +199,17 @@ const CarouselItem = ({ item, isActive, index, total }: CarouselItemProps) => {
             loop
           />
         ) : (
-          <Image
-            src={url}
-            alt={item.title}
-            width={ASPECT_WIDTH}
-            height={MAX_HEIGHT}
-          />
+          <Link href={`/events?eventId=${item.id}#event-${item.id}`}>
+            <Image
+              src={url}
+              alt={item.title}
+              width={ASPECT_WIDTH}
+              height={MAX_HEIGHT}
+              style={{ cursor: "pointer", transition: "transform 0.2s" }}
+              onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+              onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            />
+          </Link>
         )}
       </MediaContainer>
       <TextContainer>
@@ -227,40 +234,66 @@ const CarouselItem = ({ item, isActive, index, total }: CarouselItemProps) => {
 };
 
 export const HeroCarousel = () => {
-  const { getHeroCarouselItems } = useCms();
+  const { getHeroCarouselItems, getEvents } = useCms();
   const [items, setItems] = useState<HeroCarouselItem[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     let active = true;
-    getHeroCarouselItems().then((cmsItems) => {
+    Promise.all([getHeroCarouselItems(), getEvents()]).then(([cmsItems, cmsEvents]) => {
       if (!active) return;
-      if (!cmsItems || cmsItems.length === 0) return;
-      const mapped = cmsItems.map((item: HeroCarouselItem) => ({
-        id: item.id,
-        title: item.title,
-        textContent: {
-          greeting: item.textContent.greeting,
-          message: item.textContent.message ?? "",
-          closing: item.textContent.closing,
-          signature: item.textContent.signature
-            ? {
-              text: item.textContent.signature.text,
-              name: item.textContent.signature.name ?? "",
-            }
-            : undefined,
-        },
-        type: item.type,
-        aspect: item.aspect,
-        url: item.url,
-      }));
-      setItems(mapped);
+      
+      const videoItems = (cmsItems || [])
+        .filter((item) => item.type === "video")
+        .map((item: HeroCarouselItem) => ({
+          id: item.id,
+          title: item.title,
+          textContent: {
+            greeting: item.textContent.greeting,
+            message: item.textContent.message ?? "",
+            closing: item.textContent.closing,
+            signature: item.textContent.signature
+              ? {
+                  text: item.textContent.signature.text,
+                  name: item.textContent.signature.name ?? "",
+                }
+              : undefined,
+          },
+          type: item.type,
+          aspect: item.aspect,
+          url: item.url,
+        }));
+
+      const eventItems = (cmsEvents || []).map((ev) => {
+        const imgUrl = ev.images && ev.images.length > 0 ? ev.images[0] : (ev.img || "");
+        return {
+          id: ev.id,
+          title: ev.title,
+          textContent: {
+            greeting: ev.title,
+            message: ev.desc ?? "",
+            closing: ev.date
+              ? new Date(ev.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }) + (ev.time ? ` at ${ev.time}` : "")
+              : "",
+          },
+          type: "image",
+          aspect: "16:9",
+          url: imgUrl,
+        } as HeroCarouselItem;
+      });
+
+      const combined = [...videoItems, ...eventItems].filter(item => item.url);
+      setItems(combined);
     });
 
     return () => {
       active = false;
     };
-  }, [getHeroCarouselItems]);
+  }, [getHeroCarouselItems, getEvents]);
 
   const total = items.length;
   const activeItem = items[activeIndex] ?? items[0];

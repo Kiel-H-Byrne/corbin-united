@@ -165,6 +165,7 @@ export type CmsEvent = {
   desc?: string;
   img?: string;
   thumbnailUrl?: string;
+  images?: string[];
   descLists?: DescList[];
   payment?: CmsPayment;
   closingWords?: string;
