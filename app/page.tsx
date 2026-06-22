@@ -1,9 +1,6 @@
 "use client";
 
-import { Footer } from "@/components/layout/Footer";
-import { HeroCarousel } from "@/components/layout/HeroCarousel";
-import { Navigation } from "@/components/layout/Navigation";
-import { SectionTiles, Tile, TileIcon } from "@/components/ui/Tile";
+import { useCms } from "@/components/cms/useCms";
 import {
   AlbumIcon,
   EducationIcon,
@@ -12,10 +9,13 @@ import {
   HeartIcon,
   PeopleIcon,
 } from "@/components/icons";
-import { useCms } from "@/components/cms/useCms";
+import { Footer } from "@/components/layout/Footer";
+import { HeroCarousel } from "@/components/layout/HeroCarousel";
+import { Navigation } from "@/components/layout/Navigation";
+import { SectionTiles, Tile, TileIcon } from "@/components/ui/Tile";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import type React from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const AppContainer = styled.div`
@@ -76,7 +76,9 @@ const HeroButton = styled.a`
   border-radius: 9999px;
   text-decoration: none;
   box-shadow: ${(p) => p.theme.shadows.md};
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -167,7 +169,7 @@ export default function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Make a Payment / Donation
+            Make a Donation via Parish Giving
           </HeroButton>
         </HeroContent>
       </HeroSection>
