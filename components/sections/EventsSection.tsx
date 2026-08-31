@@ -11,24 +11,29 @@ import {
 } from "@/components/icons";
 import { PaymentOptions } from "@/components/PaymentOptions";
 import { ContentSection, SectionText, SectionTitle } from "@/components/ui/Section";
+import { ImageCarousel } from "@/components/ui/ImageCarousel";
 import { tokens } from "@/lib/theme";
 import { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import { useSearchParams } from "next/navigation";
 
-const EventCarousel = styled.div.attrs({
-  "data-component": "EventCarousel",
+const EventGrid = styled.div.attrs({
+  "data-component": "EventGrid",
   role: "region",
   "aria-label": "Upcoming events",
 })`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: ${(p) => p.theme.spacing.lg}px;
-  overflow-x: auto;
-  padding-bottom: ${(p) => p.theme.spacing.md}px;
-  margin-bottom: ${(p) => p.theme.spacing.md}px;
+  margin-bottom: ${(p) => p.theme.spacing.xl}px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
 `;
 
 const EventCard = styled.div.attrs({ "data-component": "EventCard" } as any)`
-  min-width: 220px;
+  width: 100%;
   background: ${(p) => p.theme.colors.surfaceAlt};
   border-radius: ${(p) => p.theme.radii.large}px;
   box-shadow: ${(p) => p.theme.cardShadow};
@@ -52,12 +57,11 @@ const NextEventCard = styled.div.attrs({
   width: 100%;
 `;
 
-const NextEventThumbnail = styled.img.attrs({
-  "data-component": "NextEventThumbnail",
+const NextEventImageWrapper = styled.div.attrs({
+  "data-component": "NextEventImageWrapper",
 } as any)`
   width: 150px;
-  height: 150px;
-  object-fit: cover;
+  flex-shrink: 0;
   border-radius: ${(p) => p.theme.radii.medium}px;
 `;
 
@@ -134,6 +138,9 @@ const DescList = styled.div`
 
 export function EventsSection() {
   const { getEvents, getPastEvents, getSections } = useCms();
+  const searchParams = useSearchParams();
+  const openEventId = searchParams.get("eventId");
+  
   const [title, setTitle] = useState("Upcoming Events");
   const [events, setEvents] = useState<Event[]>([]);
   const [pastEvents, setPastEvents] = useState<Event[]>([]);
@@ -165,6 +172,7 @@ export function EventsSection() {
       time: ev.time ?? "",
       desc: ev.desc ?? "",
       img: ev.img ?? "",
+      images: ev.images ?? [],
       thumbnailUrl: ev.thumbnailUrl ?? ev.img ?? "",
       descLists: ev.descLists?.map((list) => ({
         title: list.title ?? "",
@@ -216,11 +224,14 @@ export function EventsSection() {
     <ContentSection data-component="EventsSection">
       <SectionTitle>{title}</SectionTitle>
       {nextEvent && (
-        <NextEventCard>
-          <NextEventThumbnail
-            src={nextEvent.thumbnailUrl}
-            alt={nextEvent.title}
-          />
+        <NextEventCard id={`event-${nextEvent.id}`}>
+          <NextEventImageWrapper>
+            <ImageCarousel
+              images={nextEvent.images && nextEvent.images.length > 0 ? nextEvent.images : (nextEvent.thumbnailUrl ? [nextEvent.thumbnailUrl] : [])}
+              altText={nextEvent.title}
+              initialModalOpen={openEventId === nextEvent.id}
+            />
+          </NextEventImageWrapper>
           <NextEventDetails>
             <NextEventTitle>{nextEvent.title}</NextEventTitle>
             <NextEventInfo>
@@ -250,15 +261,13 @@ export function EventsSection() {
       {events.length > 0 && (
         <>
           <SectionText>Upcoming Events:</SectionText>
-          <EventCarousel>
+          <EventGrid>
             {events.map((ev) => (
-              <EventCard key={ev.title}>
-                <img
-                  src={ev.img}
-                  alt={ev.title}
-                  style={{ width: "100%", borderRadius: tokens.radii.medium }}
-                  data-component="EventImage"
-                  loading="lazy"
+              <EventCard key={ev.id} id={ev.id === nextEvent?.id ? undefined : `event-${ev.id}`}>
+                <ImageCarousel 
+                  images={ev.images && ev.images.length > 0 ? ev.images : (ev.img ? [ev.img] : [])} 
+                  altText={ev.title} 
+                  initialModalOpen={openEventId === ev.id && ev.id !== nextEvent?.id}
                 />
                 <EventTitle>{ev.title}</EventTitle>
                 <EventDetails>
@@ -294,21 +303,19 @@ export function EventsSection() {
                 {ev.payment && <PaymentOptions payment={ev.payment} />}
               </EventCard>
             ))}
-          </EventCarousel>
+          </EventGrid>
         </>
       )}
       {pastEvents.length > 0 && (
         <>
           <SectionText>Past Events:</SectionText>
-          <EventCarousel>
+          <EventGrid>
             {pastEvents.map((ev) => (
-              <EventCard key={ev.title}>
-                <img
-                  src={ev.img}
-                  alt={ev.title}
-                  style={{ width: "100%", borderRadius: tokens.radii.medium }}
-                  data-component="PastEventImage"
-                  loading="lazy"
+              <EventCard key={ev.id} id={`event-${ev.id}`}>
+                <ImageCarousel 
+                  images={ev.images && ev.images.length > 0 ? ev.images : (ev.img ? [ev.img] : [])} 
+                  altText={ev.title} 
+                  initialModalOpen={openEventId === ev.id}
                 />
                 <EventTitle>{ev.title}</EventTitle>
                 <EventDetails>
@@ -348,7 +355,7 @@ export function EventsSection() {
                 {ev.payment && <PaymentOptions payment={ev.payment} />}
               </EventCard>
             ))}
-          </EventCarousel>
+          </EventGrid>
         </>
       )}
     </ContentSection>

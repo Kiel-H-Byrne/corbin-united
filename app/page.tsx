@@ -1,9 +1,6 @@
 "use client";
 
-import { Footer } from "@/components/layout/Footer";
-import { HeroCarousel } from "@/components/layout/HeroCarousel";
-import { Navigation } from "@/components/layout/Navigation";
-import { SectionTiles, Tile, TileIcon } from "@/components/ui/Tile";
+import { useCms } from "@/components/cms/useCms";
 import {
   AlbumIcon,
   EducationIcon,
@@ -12,10 +9,13 @@ import {
   HeartIcon,
   PeopleIcon,
 } from "@/components/icons";
-import { useCms } from "@/components/cms/useCms";
+import { Footer } from "@/components/layout/Footer";
+import { HeroCarousel } from "@/components/layout/HeroCarousel";
+import { Navigation } from "@/components/layout/Navigation";
+import { SectionTiles, Tile, TileIcon } from "@/components/ui/Tile";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import type React from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const AppContainer = styled.div`
@@ -62,6 +62,28 @@ const HeroTagline = styled.p`
   font-weight: ${(p) => p.theme.typography.bodyFontWeightMedium};
   opacity: 0.9;
   letter-spacing: 1px;
+`;
+
+const HeroButton = styled.a`
+  display: inline-block;
+  margin-top: ${(p) => p.theme.spacing.lg}px;
+  padding: ${(p) => p.theme.spacing.md}px ${(p) => p.theme.spacing.xl}px;
+  background-color: ${(p) => p.theme.colors.surface};
+  color: ${(p) => p.theme.colors.accent};
+  font-family: ${(p) => p.theme.typography.headingFont};
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  text-decoration: none;
+  box-shadow: ${(p) => p.theme.shadows.md};
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: ${(p) => p.theme.shadows.lg};
+  }
 `;
 
 const MainContent = styled.main`
@@ -142,6 +164,13 @@ export default function HomePage() {
           <HeroTagline>
             Early, Maddox, Corbin, Oneal, Crippen, Conix, Fooks, Jordan
           </HeroTagline>
+          <HeroButton
+            href="https://www.parishgiving.org/payment;id=1F6C39377A7713782207FE66ED961241DE388967E747453E"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Make a Donation via Parish Giving
+          </HeroButton>
         </HeroContent>
       </HeroSection>
       <HeroCarousel />
