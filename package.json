@@ -4,15 +4,19 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "sanity build && next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
     "@sanity/client": "^7.14.1",
+    "@sanity/ui": "^3.2.0",
+    "@sanity/vision": "^6.11.0",
     "next": "16.1.0",
+    "next-sanity": "^13.1.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "sanity": "^6.11.0",
     "styled-components": "^6.1.19"
   },
   "devDependencies": {
