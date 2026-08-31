@@ -19,7 +19,11 @@
 
 # production
 /build
-/studio
+/dist/
+
+#sanity
+/studio/
+.sanity
 
 # misc
 .DS_Store
